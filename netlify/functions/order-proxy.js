@@ -1,9 +1,7 @@
 // netlify/functions/order-proxy.js
-console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event) => {
-  // رؤوس CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -19,7 +17,6 @@ exports.handler = async (event) => {
   }
 
   try {
-    // قراءة البيانات من الطلب
     const body = JSON.parse(event.body);
     const { storeSlug, ...orderData } = body;
 
@@ -27,17 +24,23 @@ exports.handler = async (event) => {
       throw new Error('storeSlug مطلوب في الطلب');
     }
 
-    // تهيئة عميل Supabase
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // ─── قراءة المتغيرات مع التحقق ───
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
+      console.error('❌ متغيرات Supabase غير موجودة:', {
+        SUPABASE_URL: supabaseUrl ? '✅ موجود' : '❌ غير موجود',
+        SUPABASE_SERVICE_ROLE_KEY: supabaseKey ? '✅ موجود' : '❌ غير موجود',
+      });
       throw new Error('متغيرات Supabase غير مضبوطة في البيئة');
     }
 
+    console.log('🔍 SUPABASE_URL:', supabaseUrl);
+    console.log('🔍 SUPABASE_SERVICE_ROLE_KEY:', supabaseKey ? '✅ موجود' : '❌ غير موجود');
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // جلب google_script_url من قاعدة البيانات
     const { data: store, error } = await supabase
       .from('stores')
       .select('google_script_url')
@@ -45,7 +48,7 @@ exports.handler = async (event) => {
       .single();
 
     if (error) {
-      console.error('خطأ في جلب المتجر:', error);
+      console.error('❌ خطأ في جلب المتجر:', error);
       throw new Error(`فشل جلب المتجر: ${error.message}`);
     }
 
@@ -61,7 +64,8 @@ exports.handler = async (event) => {
       };
     }
 
-    // إعادة توجيه الطلب إلى Google Apps Script
+    console.log('✅ تم جلب google_script_url:', store.google_script_url);
+
     const response = await fetch(store.google_script_url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -76,7 +80,7 @@ exports.handler = async (event) => {
       body: data,
     };
   } catch (error) {
-    console.error('خطأ في الوكيل:', error);
+    console.error('❌ خطأ في الوكيل:', error);
     return {
       statusCode: 500,
       headers,
