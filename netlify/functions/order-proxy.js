@@ -1,39 +1,24 @@
 // netlify/functions/order-proxy.js
 const { createClient } = require('@supabase/supabase-js');
 
-// تهيئة عميل Supabase من متغيرات البيئة
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 exports.handler = async (event) => {
-  // رؤوس CORS للسماح بطلبات من أي نطاق (أو من نطاقات محددة)
+  // رؤوس CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
-  // معالجة طلب Preflight (OPTIONS)
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers,
-      body: '',
-    };
+    return { statusCode: 204, headers, body: '' };
   }
 
-  // فقط طلبات POST مسموحة
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method Not Allowed' }),
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
   try {
-    // استخراج storeSlug من جسم الطلب
+    // قراءة البيانات من الطلب
     const body = JSON.parse(event.body);
     const { storeSlug, ...orderData } = body;
 
@@ -41,23 +26,44 @@ exports.handler = async (event) => {
       throw new Error('storeSlug مطلوب في الطلب');
     }
 
-    // جلب google_script_url الخاص بالمتجر من قاعدة البيانات
+    // تهيئة عميل Supabase
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('متغيرات Supabase غير مضبوطة في البيئة');
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // جلب google_script_url من قاعدة البيانات
     const { data: store, error } = await supabase
       .from('stores')
       .select('google_script_url')
       .eq('store_slug', storeSlug)
       .single();
 
-    if (error || !store || !store.google_script_url) {
-      throw new Error('لم يتم العثور على رابط Google Script لهذا المتجر');
+    if (error) {
+      console.error('خطأ في جلب المتجر:', error);
+      throw new Error(`فشل جلب المتجر: ${error.message}`);
+    }
+
+    if (!store || !store.google_script_url) {
+      console.warn(`⚠️ لا يوجد google_script_url للمتجر: ${storeSlug}`);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          success: false, 
+          error: 'لم يتم العثور على رابط Google Script لهذا المتجر' 
+        }),
+      };
     }
 
     // إعادة توجيه الطلب إلى Google Apps Script
     const response = await fetch(store.google_script_url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData),
     });
 
