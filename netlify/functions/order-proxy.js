@@ -1,4 +1,5 @@
 // netlify/functions/order-proxy.js
+console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event) => {
