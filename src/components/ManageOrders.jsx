@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { theme, cardStyle } from '../lib/theme';
-import { Package, RefreshCw, Loader as Loader2, Trash2 } from 'lucide-react';
+import { Package, RefreshCw, Loader as Loader2, Trash2, Eye, Download } from 'lucide-react';
 
+// ─── خيارات الحالات مع ألوان للصف ──────────────────────────────────────────
 const STATUS_OPTIONS = [
   { label: 'طلب جديد 🆕',      value: 'طلب جديد 🆕',      bg: '#eff6ff', color: '#2563eb', rowBg: '#eff6ff' },
   { label: 'قيد التوصيل 🚚',   value: 'قيد التوصيل 🚚',   bg: '#fef3c7', color: '#92400e', rowBg: '#fffbeb' },
@@ -20,11 +21,9 @@ export default function ManageOrders({ storeSlug }) {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
-  const [error, setError] = useState(null);
 
   const fetchOrders = async () => {
     setLoading(true);
-    setError(null);
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -35,7 +34,6 @@ export default function ManageOrders({ storeSlug }) {
       setOrders(data || []);
     } catch (err) {
       console.error('خطأ في جلب الطلبات:', err.message);
-      setError('حدث خطأ أثناء تحميل الطلبات');
     } finally {
       setLoading(false);
     }
@@ -52,40 +50,24 @@ export default function ManageOrders({ storeSlug }) {
         .eq('id', orderId);
       if (error) throw error;
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-    } catch (err) {
-      alert('حدث خطأ أثناء تحديث حالة الطلب: ' + err.message);
+    } catch {
+      alert('حدث خطأ أثناء تحديث حالة الطلب');
     } finally {
       setUpdatingId(null);
     }
   };
 
-  // ─── دالة الحذف المعدلة ──────────────────────────────────────────────
   const handleDelete = async (orderId) => {
     if (!window.confirm('هل أنت متأكد من حذف هذا الطلب نهائياً؟')) return;
-    
     setDeletingId(orderId);
     try {
-      // محاولة الحذف من قاعدة البيانات
       const { error } = await supabase
         .from('orders')
         .delete()
         .eq('id', orderId);
-
-      if (error) {
-        console.error('خطأ في الحذف:', error);
-        alert(`فشل حذف الطلب: ${error.message}`);
-        // لا نعدل الحالة المحلية إذا فشل الحذف
-        return;
-      }
-
-      // ✅ حذف ناجح: نحدّث الحالة المحلية
+      if (error) throw error;
       setOrders(prev => prev.filter(o => o.id !== orderId));
-      
-      // ✅ تحديث القائمة من قاعدة البيانات (للتأكد من التزامن)
-      await fetchOrders();
-      
-    } catch (err) {
-      console.error('خطأ غير متوقع:', err);
+    } catch {
       alert('حدث خطأ أثناء حذف الطلب');
     } finally {
       setDeletingId(null);
@@ -107,16 +89,17 @@ export default function ManageOrders({ storeSlug }) {
     </div>
   );
 
-  if (error) return (
-    <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-      <p style={{ color: '#ef4444' }}>{error}</p>
-      <button onClick={fetchOrders} style={{ marginTop: 12, padding: '8px 16px', backgroundColor: theme.colors.primary, color: '#fff', border: 'none', borderRadius: theme.radius.sm, cursor: 'pointer' }}>إعادة المحاولة</button>
-    </div>
-  );
-
   return (
     <div style={{ direction: 'rtl', fontFamily: theme.font.base }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        marginBottom: 16,
+        flexWrap: 'wrap',
+        gap: 10
+      }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 38, height: 38, backgroundColor: theme.colors.accentSoft, borderRadius: theme.radius.sm, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Package size={18} color={theme.colors.accent} />
@@ -126,7 +109,11 @@ export default function ManageOrders({ storeSlug }) {
             <p style={{ margin: 0, fontSize: 12, color: theme.colors.textSubtle }}>{orders.length} طلب إجمالي</p>
           </div>
         </div>
-        <button onClick={fetchOrders} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', backgroundColor: theme.colors.bg, border: `1px solid ${theme.colors.border}`, borderRadius: theme.radius.sm, cursor: 'pointer', fontSize: 13, fontWeight: 600, color: theme.colors.text }}>
+        <button onClick={fetchOrders} style={{ 
+          display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', 
+          backgroundColor: theme.colors.bg, border: `1px solid ${theme.colors.border}`, 
+          borderRadius: theme.radius.sm, cursor: 'pointer', fontSize: 13, fontWeight: 600, color: theme.colors.text
+        }}>
           <RefreshCw size={14} /> تحديث
         </button>
       </div>
@@ -138,16 +125,27 @@ export default function ManageOrders({ storeSlug }) {
           <p style={{ margin: '6px 0 0', color: theme.colors.textSubtle, fontSize: 13 }}>ستظهر طلبات الزبائن هنا فور وصولها</p>
         </div>
       ) : (
-        <div style={{ overflowX: 'auto', borderRadius: theme.radius.md, border: `1px solid ${theme.colors.border}`, backgroundColor: '#fff' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', minWidth: '900px' }}>
+        <div style={{ 
+          overflowX: 'auto', 
+          borderRadius: theme.radius.md, 
+          border: `1px solid ${theme.colors.border}`,
+          backgroundColor: '#fff'
+        }}>
+          <table style={{ 
+            width: '100%', 
+            borderCollapse: 'collapse', 
+            fontSize: '13px',
+            minWidth: '1000px'
+          }}>
             <thead>
               <tr style={{ backgroundColor: '#f8fafc', borderBottom: `2px solid ${theme.colors.border}`, fontWeight: 700, color: theme.colors.textMuted }}>
                 <th style={{ padding: '12px 14px', textAlign: 'right' }}>#</th>
                 <th style={{ padding: '12px 14px', textAlign: 'right' }}>العميل</th>
                 <th style={{ padding: '12px 14px', textAlign: 'right' }}>الهاتف</th>
-                <th style={{ padding: '12px 14px', textAlign: 'right' }}>البريد</th>
+                <th style={{ padding: '12px 14px', textAlign: 'right' }}>البريد الإلكتروني</th> {/* ← جديد */}
                 <th style={{ padding: '12px 14px', textAlign: 'right' }}>الولاية</th>
                 <th style={{ padding: '12px 14px', textAlign: 'right' }}>الإجمالي</th>
+                <th style={{ padding: '12px 14px', textAlign: 'right' }}>الملف</th> {/* ← جديد */}
                 <th style={{ padding: '12px 14px', textAlign: 'right' }}>التاريخ</th>
                 <th style={{ padding: '12px 14px', textAlign: 'center' }}>الحالة</th>
                 <th style={{ padding: '12px 14px', textAlign: 'center' }}>إجراءات</th>
@@ -161,10 +159,38 @@ export default function ManageOrders({ storeSlug }) {
                     <td style={{ padding: '10px 14px', fontWeight: 600, color: '#94a3b8' }}>{index + 1}</td>
                     <td style={{ padding: '10px 14px', fontWeight: 600, color: theme.colors.text }}>{order.customer_name}</td>
                     <td style={{ padding: '10px 14px', direction: 'ltr' }}>{order.customer_phone}</td>
-                    <td style={{ padding: '10px 14px', direction: 'ltr', fontSize: '12px' }}>{order.customer_email || '—'}</td>
+                    <td style={{ padding: '10px 14px', direction: 'ltr', fontSize: '12px' }}>
+                      {order.customer_email || '—'}
+                    </td>
                     <td style={{ padding: '10px 14px' }}>{order.wilaya || '—'}</td>
-                    <td style={{ padding: '10px 14px', fontWeight: 700, color: theme.colors.accent }}>{Number(order.total_price).toLocaleString('en-US')} د.ج</td>
-                    <td style={{ padding: '10px 14px', fontSize: '12px', color: theme.colors.textSubtle }}>{fmt(order.created_at)}</td>
+                    <td style={{ padding: '10px 14px', fontWeight: 700, color: theme.colors.accent }}>
+                      {Number(order.total_price).toLocaleString('en-US')} د.ج
+                    </td>
+                    <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                      {order.file_url ? (
+                        <a 
+                          href={order.file_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{ 
+                            display: 'inline-flex', 
+                            alignItems: 'center', 
+                            gap: '4px',
+                            color: theme.colors.accent,
+                            textDecoration: 'none',
+                            fontSize: '12px',
+                            fontWeight: 600
+                          }}
+                        >
+                          <Download size={14} /> تحميل
+                        </a>
+                      ) : (
+                        <span style={{ color: '#94a3b8', fontSize: '11px' }}>—</span>
+                      )}
+                    </td>
+                    <td style={{ padding: '10px 14px', fontSize: '12px', color: theme.colors.textSubtle }}>
+                      {fmt(order.created_at)}
+                    </td>
                     <td style={{ padding: '10px 14px', textAlign: 'center' }}>
                       <select
                         value={order.status}
@@ -213,6 +239,7 @@ export default function ManageOrders({ storeSlug }) {
           </table>
         </div>
       )}
+
       <style>{`
         table tr:hover {
           background-color: #f1f5f9 !important;
