@@ -5,6 +5,7 @@ import {
   Palette, Image as ImageIcon, Store, Loader as Loader2,
   Check, Type, CheckCheck, Plus, Trash2, Megaphone, Link as LinkIcon,
   Globe, Smartphone, Key, Map, House, BriefcaseBusiness, DollarSign,
+  FileText, Video,
 } from 'lucide-react';
 import { ALGERIA_WILAYAS } from '../lib/constants';
 
@@ -192,13 +193,22 @@ export default function ManageSettings({ storeSlug }) {
   // حقل Facebook Pixel
   const [facebookPixelId, setFacebookPixelId] = useState('');
 
+  // الحقول الجديدة
+  const [storePolicies, setStorePolicies] = useState('');
+  const [privacyPolicy, setPrivacyPolicy] = useState('');
+  const [bannerVideoUrl, setBannerVideoUrl] = useState('');
+
+  // ─── تغيير رابط المتجر ──────────────────────────────────────────────────
+  const [newSlug, setNewSlug] = useState('');
+  const [changingSlug, setChangingSlug] = useState(false);
+
   // ── جلب الإعدادات ──
   useEffect(() => {
     const fetchSettings = async () => {
       try {
         const { data, error } = await supabase
           .from('stores')
-          .select('store_name, primary_color, bg_color, bg_image_url, font_family, banner_urls, facebook_url, whatsapp_url, ccp_account, mobile_payment, admin_password, delivery_prices, google_script_url, facebook_pixel_id')
+          .select('store_name, primary_color, bg_color, bg_image_url, font_family, banner_urls, facebook_url, whatsapp_url, ccp_account, mobile_payment, admin_password, delivery_prices, google_script_url, facebook_pixel_id, store_policies, privacy_policy, banner_video_url')
           .eq('store_slug', storeSlug)
           .maybeSingle();
 
@@ -218,6 +228,9 @@ export default function ManageSettings({ storeSlug }) {
           setDeliveryPrices(data.delivery_prices || {});
           setGoogleScriptUrl(data.google_script_url || '');
           setFacebookPixelId(data.facebook_pixel_id || '');
+          setStorePolicies(data.store_policies || '');
+          setPrivacyPolicy(data.privacy_policy || '');
+          setBannerVideoUrl(data.banner_video_url || '');
         }
       } catch (err) {
         console.error('خطأ في جلب الإعدادات:', err.message);
@@ -251,6 +264,9 @@ export default function ManageSettings({ storeSlug }) {
           delivery_prices: deliveryPrices,
           google_script_url: googleScriptUrl,
           facebook_pixel_id: facebookPixelId,
+          store_policies: storePolicies,
+          privacy_policy: privacyPolicy,
+          banner_video_url: bannerVideoUrl,
         })
         .eq('store_slug', storeSlug);
 
@@ -261,6 +277,54 @@ export default function ManageSettings({ storeSlug }) {
       alert(`❌ فشل حفظ الإعدادات: ${err.message}`);
     } finally {
       setSaveLoading(false);
+    }
+  };
+
+  // ─── تغيير الرابط (بدون redirects) ──────────────────────────────────────
+  const handleChangeSlug = async () => {
+    const slug = newSlug.trim().toLowerCase();
+    if (!slug) return alert('الرجاء إدخال رابط جديد');
+    if (slug === storeSlug) return alert('الرابط الجديد مطابق للرابط الحالي');
+    if (!/^[a-z0-9_-]+$/.test(slug)) {
+      return alert('الرابط يجب أن يحتوي فقط على أحرف إنجليزية وأرقام و _ و -');
+    }
+
+    // التحقق من عدم استخدام الرابط
+    const { data: existing } = await supabase
+      .from('stores')
+      .select('store_slug')
+      .eq('store_slug', slug)
+      .maybeSingle();
+
+    if (existing) return alert('هذا الرابط مستخدم من قبل متجر آخر');
+
+    if (!window.confirm(`⚠️ هل أنت متأكد من تغيير رابط المتجر إلى "${slug}"؟\n\nالروابط القديمة لن تعمل بعد الآن، وسيكون عليك تحديثها يدوياً.`)) return;
+
+    setChangingSlug(true);
+    try {
+      // 1. تحديث جدول المتجر
+      const { error: storeErr } = await supabase
+        .from('stores')
+        .update({ store_slug: slug })
+        .eq('store_slug', storeSlug);
+      if (storeErr) throw storeErr;
+
+      // 2. تحديث الجداول المرتبطة
+      const tables = ['orders', 'visits', 'products'];
+      for (const table of tables) {
+        const { error } = await supabase
+          .from(table)
+          .update({ store_slug: slug })
+          .eq('store_slug', storeSlug);
+        if (error) throw new Error(`فشل تحديث جدول ${table}: ${error.message}`);
+      }
+
+      alert(`✅ تم تغيير رابط المتجر إلى "${slug}" بنجاح!`);
+      window.location.href = `/${slug}`;
+    } catch (err) {
+      alert(`❌ فشل تغيير الرابط: ${err.message}`);
+    } finally {
+      setChangingSlug(false);
     }
   };
 
@@ -338,6 +402,29 @@ export default function ManageSettings({ storeSlug }) {
         {/* البنرات */}
         <BannerManager bannerUrls={bannerUrls} onChange={setBannerUrls} />
 
+        {/* ─── فيديو البنر ─── */}
+        <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <SectionLabel icon={<Video size={15} />} label="فيديو البنر (خلفية متحركة)" />
+          <p style={{ margin: 0, color: theme.colors.textSubtle, fontSize: '12px' }}>
+            أضف رابط فيديو ليظهر كخلفية في البنر بدلاً من الصور.
+            <br />
+            يدعم روابط MP4 المباشرة، وروابط تضمين YouTube و Vimeo.
+          </p>
+          <div>
+            <label style={labelStyle}>رابط الفيديو</label>
+            <input
+              type="url"
+              value={bannerVideoUrl}
+              onChange={e => setBannerVideoUrl(e.target.value)}
+              placeholder="https://example.com/video.mp4 أو https://www.youtube.com/embed/..."
+              style={inputStyle}
+            />
+            <p style={{ margin: '4px 0 0', fontSize: '11px', color: '#94a3b8' }}>
+              اتركه فارغاً لعرض الصور بدلاً من الفيديو.
+            </p>
+          </div>
+        </div>
+
         {/* وسائل التواصل الاجتماعي */}
         <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <SectionLabel icon={<Globe size={15} />} label="وسائل التواصل الاجتماعي" />
@@ -377,6 +464,68 @@ export default function ManageSettings({ storeSlug }) {
 
         {/* أسعار التوصيل */}
         <DeliveryManager deliveryPrices={deliveryPrices} onChange={setDeliveryPrices} />
+
+        {/* ─── سياسات المتجر ─── */}
+        <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <SectionLabel icon={<FileText size={15} />} label="سياسات المتجر" />
+          <p style={{ margin: 0, color: theme.colors.textSubtle, fontSize: '12px' }}>
+            أدخل شروط البيع، سياسات التوصيل، الإرجاع، وغيرها.
+          </p>
+          <div>
+            <label style={labelStyle}>سياسات المتجر</label>
+            <textarea
+              value={storePolicies}
+              onChange={e => setStorePolicies(e.target.value)}
+              placeholder="أدخل سياسات متجرك هنا..."
+              style={{ ...inputStyle, height: '120px', resize: 'vertical' }}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>سياسة الخصوصية</label>
+            <textarea
+              value={privacyPolicy}
+              onChange={e => setPrivacyPolicy(e.target.value)}
+              placeholder="أدخل سياسة الخصوصية هنا..."
+              style={{ ...inputStyle, height: '120px', resize: 'vertical' }}
+            />
+          </div>
+        </div>
+
+        {/* ─── تغيير رابط المتجر ─── */}
+        <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', border: '2px solid #f59e0b' }}>
+          <SectionLabel icon={<LinkIcon size={15} />} label="تغيير رابط المتجر (متقدم)" />
+          <p style={{ margin: 0, color: '#d97706', fontSize: '12px' }}>
+            ⚠️ تغيير الرابط سيؤدي إلى تغيير عنوان متجرك. <strong>الروابط القديمة لن تعمل بعد الآن</strong>، وسيكون عليك تحديثها يدوياً في حساباتك وإعلاناتك.
+          </p>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <input
+              type="text"
+              value={newSlug}
+              onChange={e => setNewSlug(e.target.value.toLowerCase())}
+              placeholder="الرابط الجديد (أحرف إنجليزية وأرقام فقط)"
+              style={{ ...inputStyle, flex: 1 }}
+            />
+            <button
+              onClick={handleChangeSlug}
+              disabled={changingSlug || !newSlug.trim()}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: changingSlug ? '#94a3b8' : '#f59e0b',
+                color: '#fff',
+                border: 'none',
+                borderRadius: theme.radius.sm,
+                cursor: changingSlug ? 'not-allowed' : 'pointer',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {changingSlug ? 'جاري التغيير...' : 'تغيير الرابط'}
+            </button>
+          </div>
+          <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+            الرابط الحالي: <strong style={{ color: '#0f172a' }}>/{storeSlug}</strong>
+          </div>
+        </div>
 
         {/* ─── إعدادات Google Sheets (VIP) ─── */}
         <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', border: '2px solid #fbbf24' }}>
