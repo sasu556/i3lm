@@ -17,8 +17,7 @@ const loadGoogleFont = (fontFamily) => {
 const slugFromUrl = () => {
   if (typeof window === 'undefined') return null;
   const parts = window.location.pathname.split('/').filter(Boolean);
-  const idx = parts.indexOf('store');
-  return idx !== -1 ? parts[idx + 1] : parts[0] || null;
+  return parts[0] || null;
 };
 
 const safeColor = (c) => (!c ? '#4f46e5' : c.replace(/[{};]/g, '').trim());
@@ -66,8 +65,9 @@ const IconWhatsApp = ({ size = 24, color = '#94a3b8' }) => (
   </svg>
 );
 
-// ─── Hero Slider ─────────────────────────────────────────────────────────────
+// ─── Hero Slider ──────────────────────────────────────────────────────────
 function HeroSlider({ store, primaryColor }) {
+  const videoUrl = store?.banner_video_url?.trim();
   const raw = store?.banner_urls;
   const banners = Array.isArray(raw) && raw.length > 0
     ? raw.filter((u) => u?.trim())
@@ -90,8 +90,96 @@ function HeroSlider({ store, primaryColor }) {
   const DEFAULT_BG = 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1400&auto=format&fit=crop&q=80';
   const slides = total > 0 ? banners : [DEFAULT_BG];
 
+  const borderStyle = {
+    border: `4px solid ${primaryColor}`,
+    borderRadius: '16px',
+    boxShadow: `0 8px 30px ${alpha(primaryColor, 0.3)}`,
+  };
+
+  // ─── إذا كان هناك رابط فيديو ─────────────────────────────────────────────
+  if (videoUrl) {
+    let finalUrl = videoUrl;
+    let isYoutube = false;
+    let isVimeo = false;
+
+    if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
+      isYoutube = true;
+      let videoId = '';
+      if (videoUrl.includes('youtu.be/')) {
+        videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+      } else if (videoUrl.includes('youtube.com/watch?v=')) {
+        videoId = videoUrl.split('v=')[1].split('&')[0];
+      }
+      if (videoId) {
+        finalUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&mute=1&controls=0&rel=0`;
+      }
+    } else if (videoUrl.includes('youtube.com/embed/')) {
+      isYoutube = true;
+      const videoId = videoUrl.split('/embed/')[1].split('?')[0];
+      if (videoId && !videoUrl.includes('autoplay')) {
+        const separator = videoUrl.includes('?') ? '&' : '?';
+        finalUrl = `${videoUrl}${separator}autoplay=1&loop=1&playlist=${videoId}&mute=1&controls=0&rel=0`;
+      }
+    } else if (videoUrl.includes('vimeo.com/')) {
+      isVimeo = true;
+      const videoId = videoUrl.split('/').pop();
+      if (videoId) {
+        finalUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=1&muted=1`;
+      }
+    }
+
+    return (
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        height: 'clamp(220px, 40vw, 380px)',
+        overflow: 'hidden',
+        backgroundColor: '#0f172a',
+        flexShrink: 0,
+        ...borderStyle,
+      }}>
+        {isYoutube || isVimeo ? (
+          <iframe
+            src={finalUrl}
+            style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }}
+            allow="autoplay; encrypted-media; fullscreen"
+            allowFullScreen
+          />
+        ) : (
+          <video
+            src={finalUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        )}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', bottom: 0, right: 0, left: 0, padding: 'clamp(16px,3vw,28px) clamp(16px,4vw,36px)', display: 'flex', alignItems: 'flex-end', gap: 14, zIndex: 5 }}>
+          {store?.logo_url?.trim() && (
+            <img src={store.logo_url.trim()} alt="logo" style={{ width: 'clamp(48px,8vw,72px)', height: 'clamp(48px,8vw,72px)', objectFit: 'cover', borderRadius: 14, border: '2.5px solid rgba(255,255,255,0.85)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', flexShrink: 0 }} onError={(e) => { e.target.style.display = 'none'; }} />
+          )}
+          <div>
+            <h1 style={{ margin: 0, fontSize: 'clamp(18px,4vw,30px)', fontWeight: 800, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.25 }}>{store?.store_name}</h1>
+            <p style={{ margin: '4px 0 0', fontSize: 'clamp(11px,2vw,14px)', color: 'rgba(255,255,255,0.75)' }}>مرحباً بك في متجرنا الإلكتروني</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── عرض الصور ────────────────────────────────────────────────────────────
   return (
-    <div style={{ position: 'relative', width: '100%', height: 'clamp(220px, 40vw, 380px)', overflow: 'hidden', backgroundColor: '#0f172a', flexShrink: 0 }}>
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      height: 'clamp(220px, 40vw, 380px)',
+      overflow: 'hidden',
+      backgroundColor: '#0f172a',
+      flexShrink: 0,
+      ...borderStyle,
+    }}>
       {slides.map((src, i) => (
         <div key={i} style={{ position: 'absolute', inset: 0, opacity: i === cur ? 1 : 0, transition: 'opacity 0.75s ease', pointerEvents: i === cur ? 'auto' : 'none' }}>
           <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} onError={(e) => { e.target.src = DEFAULT_BG; }} />
@@ -506,22 +594,29 @@ export default function StoreFront({ storeSlugProp, slug }) {
     return () => { document.documentElement.style.fontFamily = ''; };
   }, [store?.font_family]);
 
-  // ── تسجيل الزيارة (مع تجاهل الأخطاء) ──
+  // ── تسجيل الزيارة (تجاهل أي خطأ) ──────────────────────────────────────
   useEffect(() => {
     if (!storeSlug) return;
     const logVisit = async () => {
       try {
-        const ip = await fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => data.ip).catch(() => null);
-        await supabase.from('visits').insert([{ store_slug: storeSlug, visitor_ip: ip, user_agent: navigator.userAgent }]);
-      } catch (e) { console.warn('Visit logging failed (ignored):', e); }
+        const ip = await fetch('https://api.ipify.org?format=json')
+          .then((res) => res.json())
+          .then((data) => data.ip)
+          .catch(() => null);
+        await supabase.from('visits').insert([
+          { store_slug: storeSlug, visitor_ip: ip, user_agent: navigator.userAgent },
+        ]);
+      } catch (e) {
+        // تجاهل جميع الأخطاء (409, 23505, network, etc.)
+        // لأن تسجيل الزيارة ليس حرجاً.
+      }
     };
     logVisit();
   }, [storeSlug]);
 
-  // ── Facebook Pixel ── (الحل الصحيح)
+  // ── Facebook Pixel ──
   useEffect(() => {
     if (!store?.facebook_pixel_id) return;
-    // تجنب الإضافة المزدوجة
     if (document.getElementById('fb-pixel-script')) return;
 
     const script = document.createElement('script');
@@ -591,7 +686,18 @@ export default function StoreFront({ storeSlugProp, slug }) {
   );
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: store?.bg_color || '#f8fafc', backgroundImage: store?.bg_image_url?.trim() ? `url("${store.bg_image_url.trim()}")` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', fontFamily: store?.font_family || 'system-ui', direction: 'rtl' }}>
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: store?.bg_color || '#f8fafc',
+      backgroundImage: store?.bg_image_url?.trim() ? `url("${store.bg_image_url.trim()}")` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      fontFamily: store?.font_family || 'system-ui',
+      direction: 'rtl',
+    }}>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes sfSpin { to { transform: rotate(360deg) } }
