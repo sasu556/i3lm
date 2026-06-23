@@ -8,17 +8,29 @@ import ManageOrders from './components/ManageOrders';
 import { Menu, X, Package, Palette, ExternalLink, LogOut, Mail, Lock, Store, Link as LinkIcon, Copy, Check, Loader as Loader2, ShoppingCart } from 'lucide-react';
 
 export default function App() {
-  const pathParts = window.location.pathname.split('/');
-  const customerStoreSlug = pathParts[1] === 'store' ? pathParts[2] : null;
+  // ─── قراءة المسار من الرابط ──────────────────────────────────────────
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  let customerStoreSlug = null;
+  if (pathParts[0] === 'store' && pathParts[1]) {
+    customerStoreSlug = pathParts[1];
+  } else if (pathParts[0]) {
+    customerStoreSlug = pathParts[0];
+  }
 
-  const [session,     setSession]     = useState(null);
-  const [loading,     setLoading]     = useState(true);
-  const [myStore,     setMyStore]     = useState(null);
-  const [activeTab,   setActiveTab]   = useState('products');
-  const [drawerOpen,  setDrawerOpen]  = useState(false);
-  const [copied,      setCopied]      = useState(false);
-  const [email,       setEmail]       = useState('');
-  const [password,    setPassword]    = useState('');
+  // ─── عرض المتجر مباشرة (بدون إعادة توجيه) ──────────────────────────
+  if (customerStoreSlug) {
+    return <StoreFront slug={customerStoreSlug} />;
+  }
+
+  // ─── باقي المكون (الجلسة، لوحة التحكم) ──────────────────────────────
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [myStore, setMyStore] = useState(null);
+  const [activeTab, setActiveTab] = useState('products');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
@@ -53,7 +65,9 @@ export default function App() {
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(storeCustomerUrl).catch(() => {});
+    if (!myStore) return;
+    const url = `${window.location.origin}/${myStore.store_slug}`;
+    navigator.clipboard.writeText(url).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -64,10 +78,6 @@ export default function App() {
     { id: 'settings', label: 'تعديل مظهر المتجر', icon: Palette,      description: 'الخطوط، البنرات، والهوية البصرية' },
   ];
 
-  // ── Storefront (public) ──
-  if (customerStoreSlug) return <StoreFront slug={customerStoreSlug} />;
-
-  // ── Loading ──
   if (loading) return (
     <div style={{ ...centered, fontFamily: theme.font.base, direction: 'rtl' }}>
       <Loader2 size={28} color={theme.colors.textSubtle} style={{ animation: 'spin 1s linear infinite' }} />
@@ -76,7 +86,6 @@ export default function App() {
     </div>
   );
 
-  // ── Login ──
   if (!session) return (
     <div style={{ ...fullScreen, backgroundColor: theme.colors.bg, direction: 'rtl', fontFamily: theme.font.base }}>
       <div style={{ ...cardStyle, padding: 40, width: '100%', maxWidth: 420, boxShadow: theme.shadow.xl }}>
@@ -112,7 +121,6 @@ export default function App() {
     </div>
   );
 
-  // ── No store ──
   if (!myStore) return (
     <div style={{ ...centered, direction: 'rtl', fontFamily: theme.font.base, minHeight: '100vh', backgroundColor: theme.colors.bg }}>
       <div style={{ ...cardStyle, padding: 40, textAlign: 'center', maxWidth: 440 }}>
@@ -126,14 +134,12 @@ export default function App() {
     </div>
   );
 
-  const storeCustomerUrl = `${window.location.origin}/store/${myStore.store_slug}`;
+  const storeCustomerUrl = `${window.location.origin}/${myStore.store_slug}`;
 
-  // ── Dashboard ──
   return (
     <div style={{ fontFamily: theme.font.base, direction: 'rtl', minHeight: '100vh', backgroundColor: theme.colors.bg }}>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } } @keyframes drawerSlideIn { from { transform: translateX(100%) } to { transform: translateX(0) } } @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } } @keyframes slideUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } } .drawer-enter { animation: drawerSlideIn 280ms cubic-bezier(0.32,0.72,0,1) both } .overlay-enter { animation: fadeIn 200ms ease both } .content-enter { animation: slideUp 240ms cubic-bezier(0.4,0,0.2,1) both }`}</style>
 
-      {/* Header */}
       <header style={{ backgroundColor: theme.colors.surface, borderBottom: `1px solid ${theme.colors.border}`, padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, position: 'sticky', top: 0, zIndex: 50, boxShadow: theme.shadow.xs }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => setDrawerOpen(true)} style={iconButton} aria-label="فتح القائمة">
@@ -150,7 +156,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Store URL pill */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, backgroundColor: theme.colors.bg, padding: '7px 8px 7px 12px', borderRadius: theme.radius.pill, border: `1px solid ${theme.colors.border}`, overflow: 'hidden', maxWidth: '45vw' }}>
           <LinkIcon size={14} color={theme.colors.textMuted} style={{ flexShrink: 0 }} />
           <input type="text" readOnly value={storeCustomerUrl}
@@ -168,7 +173,6 @@ export default function App() {
         </button>
       </header>
 
-      {/* Drawer */}
       {drawerOpen && (<>
         <div className="overlay-enter" onClick={() => setDrawerOpen(false)}
           style={{ position: 'fixed', inset: 0, backgroundColor: theme.colors.overlay, zIndex: 90, backdropFilter: 'blur(2px)' }} />
@@ -212,7 +216,6 @@ export default function App() {
         </aside>
       </>)}
 
-      {/* Content */}
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '28px 20px 60px' }}>
         <div className="content-enter" key={activeTab}>
           {activeTab === 'products' && <ManageProducts storeSlug={myStore.store_slug} />}
