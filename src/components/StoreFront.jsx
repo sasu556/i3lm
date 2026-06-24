@@ -65,7 +65,7 @@ const IconWhatsApp = ({ size = 24, color = '#94a3b8' }) => (
   </svg>
 );
 
-// ─── Hero Slider ──────────────────────────────────────────────────────────
+// ─── Hero Slider (معدل بالكلاسات) ──────────────────────────────────────────
 function HeroSlider({ store, primaryColor }) {
   const videoUrl = store?.banner_video_url?.trim();
   const raw = store?.banner_urls;
@@ -96,7 +96,6 @@ function HeroSlider({ store, primaryColor }) {
     boxShadow: `0 8px 30px ${alpha(primaryColor, 0.3)}`,
   };
 
-  // ─── إذا كان هناك رابط فيديو ─────────────────────────────────────────────
   if (videoUrl) {
     let finalUrl = videoUrl;
     let isYoutube = false;
@@ -129,7 +128,7 @@ function HeroSlider({ store, primaryColor }) {
     }
 
     return (
-      <div style={{
+      <div className="store-hero hero-slider" style={{
         position: 'relative',
         width: '100%',
         height: 'clamp(220px, 40vw, 380px)',
@@ -140,6 +139,7 @@ function HeroSlider({ store, primaryColor }) {
       }}>
         {isYoutube || isVimeo ? (
           <iframe
+            className="hero-video"
             src={finalUrl}
             style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }}
             allow="autoplay; encrypted-media; fullscreen"
@@ -147,6 +147,7 @@ function HeroSlider({ store, primaryColor }) {
           />
         ) : (
           <video
+            className="hero-video"
             src={finalUrl}
             autoPlay
             muted
@@ -155,23 +156,22 @@ function HeroSlider({ store, primaryColor }) {
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         )}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
-        <div style={{ position: 'absolute', bottom: 0, right: 0, left: 0, padding: 'clamp(16px,3vw,28px) clamp(16px,4vw,36px)', display: 'flex', alignItems: 'flex-end', gap: 14, zIndex: 5 }}>
+        <div className="hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
+        <div className="hero-content" style={{ position: 'absolute', bottom: 0, right: 0, left: 0, padding: 'clamp(16px,3vw,28px) clamp(16px,4vw,36px)', display: 'flex', alignItems: 'flex-end', gap: 14, zIndex: 5 }}>
           {store?.logo_url?.trim() && (
-            <img src={store.logo_url.trim()} alt="logo" style={{ width: 'clamp(48px,8vw,72px)', height: 'clamp(48px,8vw,72px)', objectFit: 'cover', borderRadius: 14, border: '2.5px solid rgba(255,255,255,0.85)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', flexShrink: 0 }} onError={(e) => { e.target.style.display = 'none'; }} />
+            <img className="hero-logo" src={store.logo_url.trim()} alt="logo" style={{ width: 'clamp(48px,8vw,72px)', height: 'clamp(48px,8vw,72px)', objectFit: 'cover', borderRadius: 14, border: '2.5px solid rgba(255,255,255,0.85)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', flexShrink: 0 }} onError={(e) => { e.target.style.display = 'none'; }} />
           )}
           <div>
-            <h1 style={{ margin: 0, fontSize: 'clamp(18px,4vw,30px)', fontWeight: 800, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.25 }}>{store?.store_name}</h1>
-            <p style={{ margin: '4px 0 0', fontSize: 'clamp(11px,2vw,14px)', color: 'rgba(255,255,255,0.75)' }}>مرحباً بك في متجرنا الإلكتروني</p>
+            <h1 className="hero-title" style={{ margin: 0, fontSize: 'clamp(18px,4vw,30px)', fontWeight: 800, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.25 }}>{store?.store_name}</h1>
+            <p className="hero-subtitle" style={{ margin: '4px 0 0', fontSize: 'clamp(11px,2vw,14px)', color: 'rgba(255,255,255,0.75)' }}>مرحباً بك في متجرنا الإلكتروني</p>
           </div>
         </div>
       </div>
     );
   }
 
-  // ─── عرض الصور ────────────────────────────────────────────────────────────
   return (
-    <div style={{
+    <div className="store-hero hero-slider" style={{
       position: 'relative',
       width: '100%',
       height: 'clamp(220px, 40vw, 380px)',
@@ -181,27 +181,27 @@ function HeroSlider({ store, primaryColor }) {
       ...borderStyle,
     }}>
       {slides.map((src, i) => (
-        <div key={i} style={{ position: 'absolute', inset: 0, opacity: i === cur ? 1 : 0, transition: 'opacity 0.75s ease', pointerEvents: i === cur ? 'auto' : 'none' }}>
-          <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} onError={(e) => { e.target.src = DEFAULT_BG; }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
+        <div key={i} className={`hero-slide ${i === cur ? 'active' : ''}`} style={{ position: 'absolute', inset: 0, opacity: i === cur ? 1 : 0, transition: 'opacity 0.75s ease', pointerEvents: i === cur ? 'auto' : 'none' }}>
+          <img className="hero-image" src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} onError={(e) => { e.target.src = DEFAULT_BG; }} />
+          <div className="hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
         </div>
       ))}
-      <div style={{ position: 'absolute', bottom: 0, right: 0, left: 0, padding: 'clamp(16px,3vw,28px) clamp(16px,4vw,36px)', display: 'flex', alignItems: 'flex-end', gap: 14, zIndex: 5 }}>
+      <div className="hero-content" style={{ position: 'absolute', bottom: 0, right: 0, left: 0, padding: 'clamp(16px,3vw,28px) clamp(16px,4vw,36px)', display: 'flex', alignItems: 'flex-end', gap: 14, zIndex: 5 }}>
         {store?.logo_url?.trim() && (
-          <img src={store.logo_url.trim()} alt="logo" style={{ width: 'clamp(48px,8vw,72px)', height: 'clamp(48px,8vw,72px)', objectFit: 'cover', borderRadius: 14, border: '2.5px solid rgba(255,255,255,0.85)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', flexShrink: 0 }} onError={(e) => { e.target.style.display = 'none'; }} />
+          <img className="hero-logo" src={store.logo_url.trim()} alt="logo" style={{ width: 'clamp(48px,8vw,72px)', height: 'clamp(48px,8vw,72px)', objectFit: 'cover', borderRadius: 14, border: '2.5px solid rgba(255,255,255,0.85)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', flexShrink: 0 }} onError={(e) => { e.target.style.display = 'none'; }} />
         )}
         <div>
-          <h1 style={{ margin: 0, fontSize: 'clamp(18px,4vw,30px)', fontWeight: 800, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.25 }}>{store?.store_name}</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 'clamp(11px,2vw,14px)', color: 'rgba(255,255,255,0.75)' }}>مرحباً بك في متجرنا الإلكتروني</p>
+          <h1 className="hero-title" style={{ margin: 0, fontSize: 'clamp(18px,4vw,30px)', fontWeight: 800, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.5)', lineHeight: 1.25 }}>{store?.store_name}</h1>
+          <p className="hero-subtitle" style={{ margin: '4px 0 0', fontSize: 'clamp(11px,2vw,14px)', color: 'rgba(255,255,255,0.75)' }}>مرحباً بك في متجرنا الإلكتروني</p>
         </div>
       </div>
       {total > 1 && (
         <>
-          <HeroArrow dir="right" onClick={() => go(cur - 1)} />
-          <HeroArrow dir="left" onClick={() => go(cur + 1)} />
-          <div style={{ position: 'absolute', bottom: 14, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6, zIndex: 5 }}>
+          <HeroArrow dir="right" className="hero-arrow hero-arrow-right" onClick={() => go(cur - 1)} />
+          <HeroArrow dir="left" className="hero-arrow hero-arrow-left" onClick={() => go(cur + 1)} />
+          <div className="hero-dots" style={{ position: 'absolute', bottom: 14, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6, zIndex: 5 }}>
             {slides.map((_, i) => (
-              <button key={i} onClick={() => setCur(i)} style={{ width: i === cur ? 22 : 7, height: 7, padding: 0, border: 'none', cursor: 'pointer', borderRadius: 9999, transition: 'all 0.3s', backgroundColor: i === cur ? '#fff' : 'rgba(255,255,255,0.4)' }} />
+              <button key={i} className={`hero-dot ${i === cur ? 'active' : ''}`} onClick={() => setCur(i)} style={{ width: i === cur ? 22 : 7, height: 7, padding: 0, border: 'none', cursor: 'pointer', borderRadius: 9999, transition: 'all 0.3s', backgroundColor: i === cur ? '#fff' : 'rgba(255,255,255,0.4)' }} />
             ))}
           </div>
         </>
@@ -210,9 +210,9 @@ function HeroSlider({ store, primaryColor }) {
   );
 }
 
-function HeroArrow({ dir, onClick }) {
+function HeroArrow({ dir, onClick, className }) {
   return (
-    <button onClick={onClick} style={{ position: 'absolute', top: '50%', [dir]: 12, transform: 'translateY(-50%)', width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer', backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', color: '#fff', fontSize: 22, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 6, transition: 'background 0.2s' }}
+    <button className={className} onClick={onClick} style={{ position: 'absolute', top: '50%', [dir]: 12, transform: 'translateY(-50%)', width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer', backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', color: '#fff', fontSize: 22, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 6, transition: 'background 0.2s' }}
       onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.28)')}
       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)')}
     >
@@ -221,41 +221,89 @@ function HeroArrow({ dir, onClick }) {
   );
 }
 
-// ─── Product Card ──────────────────────────────────────────────────────────
-function ProductCard({ product, primaryColor, onAddToCart }) {
+// ─── Product Card (تم إصلاح استقبال onAddToCart وإضافة كلاسات) ──────────────────
+function ProductCard({ product, primaryColor, templateSettings, onAddToCart }) {
   const [hov, setHov] = useState(false);
   const [qty, setQty] = useState(1);
   const inStock = product.in_stock !== false;
 
   const handleAdd = () => {
-    if (qty > 0) {
+    if (qty > 0 && onAddToCart) {
       onAddToCart(product, qty);
       setQty(1);
     }
   };
 
+  const cardStyle = templateSettings?.layout?.cardStyle || 'rounded';
+  let cardBorderRadius = '14px';
+  let cardBoxShadow = '0 2px 6px rgba(0,0,0,0.05)';
+  let cardHoverTransform = 'translateY(-4px)';
+
+  if (cardStyle === 'rounded-shadow') {
+    cardBorderRadius = '16px';
+    cardBoxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+    cardHoverTransform = 'translateY(-6px) scale(1.01)';
+  } else if (cardStyle === 'square') {
+    cardBorderRadius = '0px';
+    cardBoxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+    cardHoverTransform = 'translateY(-2px)';
+  } else if (cardStyle === 'none') {
+    cardBorderRadius = '0px';
+    cardBoxShadow = 'none';
+    cardHoverTransform = 'none';
+  }
+
   return (
-    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ backgroundColor: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid #e8edf3', boxShadow: hov ? '0 12px 32px rgba(0,0,0,0.10)' : '0 2px 6px rgba(0,0,0,0.05)', transform: hov ? 'translateY(-4px)' : 'translateY(0)', transition: 'all 0.25s ease', display: 'flex', flexDirection: 'column', direction: 'rtl' }}>
-      <div style={{ position: 'relative', width: '100%', paddingTop: '75%', backgroundColor: '#f1f5f9', overflow: 'hidden', flexShrink: 0 }}>
+    <div
+      className="product-card"
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        backgroundColor: '#fff',
+        borderRadius: cardBorderRadius,
+        overflow: 'hidden',
+        border: '1px solid #e8edf3',
+        boxShadow: hov ? '0 12px 32px rgba(0,0,0,0.10)' : cardBoxShadow,
+        transform: hov ? cardHoverTransform : 'translateY(0)',
+        transition: 'all 0.25s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        direction: 'rtl',
+      }}
+    >
+      <div className="product-image" style={{ position: 'relative', width: '100%', paddingTop: '75%', backgroundColor: '#f1f5f9', overflow: 'hidden', flexShrink: 0 }}>
         {product.image_url ? (
-          <img src={product.image_url} alt={product.title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.35s ease', transform: hov ? 'scale(1.05)' : 'scale(1)' }} onError={(e) => { e.target.style.display = 'none'; }} />
+          <img
+            className="product-img"
+            src={product.image_url}
+            alt={product.title}
+            style={{
+              position: 'absolute', top: 0, left: 0,
+              width: '100%', height: '100%',
+              objectFit: 'cover', objectPosition: 'center',
+              display: 'block',
+              transition: 'transform 0.35s ease',
+              transform: hov ? 'scale(1.05)' : 'scale(1)',
+            }}
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
         ) : (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, color: '#cbd5e1' }}>📦</div>
+          <div className="product-img-placeholder" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, color: '#cbd5e1' }}>📦</div>
         )}
-        <span style={{ position: 'absolute', top: 8, left: 8, padding: '3px 9px', borderRadius: 9999, fontSize: 10, fontWeight: 700, backgroundColor: inStock ? '#ecfdf5' : '#fef2f2', color: inStock ? '#059669' : '#dc2626', border: `1px solid ${inStock ? '#bbf7d0' : '#fecaca'}`, lineHeight: 1.4 }}>{inStock ? '● متوفر' : '● نفذ'}</span>
-        {product.category && <span style={{ position: 'absolute', top: 8, right: 8, padding: '3px 9px', borderRadius: 9999, fontSize: 10, fontWeight: 700, backgroundColor: 'rgba(255,255,255,0.92)', color: '#374151', border: '1px solid rgba(0,0,0,0.08)', lineHeight: 1.4 }}>{product.category}</span>}
-        {product.is_digital && <span style={{ position: 'absolute', bottom: 8, right: 8, padding: '3px 9px', borderRadius: 9999, fontSize: 10, fontWeight: 700, backgroundColor: 'rgba(59,130,246,0.9)', color: '#fff', lineHeight: 1.4 }}>📱 رقمي</span>}
+        <span className="product-stock-badge" style={{ position: 'absolute', top: 8, left: 8, padding: '3px 9px', borderRadius: 9999, fontSize: 10, fontWeight: 700, backgroundColor: inStock ? '#ecfdf5' : '#fef2f2', color: inStock ? '#059669' : '#dc2626', border: `1px solid ${inStock ? '#bbf7d0' : '#fecaca'}`, lineHeight: 1.4 }}>{inStock ? '● متوفر' : '● نفذ'}</span>
+        {product.category && <span className="product-category-badge" style={{ position: 'absolute', top: 8, right: 8, padding: '3px 9px', borderRadius: 9999, fontSize: 10, fontWeight: 700, backgroundColor: 'rgba(255,255,255,0.92)', color: '#374151', border: '1px solid rgba(0,0,0,0.08)', lineHeight: 1.4 }}>{product.category}</span>}
+        {product.is_digital && <span className="product-digital-badge" style={{ position: 'absolute', bottom: 8, right: 8, padding: '3px 9px', borderRadius: 9999, fontSize: 10, fontWeight: 700, backgroundColor: 'rgba(59,130,246,0.9)', color: '#fff', lineHeight: 1.4 }}>📱 رقمي</span>}
       </div>
-      <div style={{ padding: '12px 12px 14px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
-        <h3 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#0f172a', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '2.9em' }}>{product.title}</h3>
-        {product.description && <p style={{ margin: 0, fontSize: 11, color: '#64748b', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.description}</p>}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto', paddingTop: 10, borderTop: '1px solid #f1f5f9' }}>
-          <div style={{ lineHeight: 1 }}><span style={{ fontSize: 15, fontWeight: 800, color: primaryColor }}>{formatPrice(product.price)}</span><span style={{ fontSize: 10, color: '#94a3b8', marginRight: 2 }}>د.ج</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-            <button disabled={!inStock} onClick={() => setQty((q) => Math.max(1, q - 1))} style={qtyBtnStyle(primaryColor)}>−</button>
-            <input type="number" min="1" max={product.stock_quantity || 999} value={qty} onChange={(e) => setQty(Math.max(1, parseInt(e.target.value) || 1))} style={{ width: '36px', textAlign: 'center', fontSize: 13, fontWeight: 700, border: '1px solid #e2e8f0', borderRadius: 6, padding: '4px 0', background: '#f8fafc', color: '#0f172a' }} />
-            <button disabled={!inStock} onClick={() => setQty((q) => q + 1)} style={qtyBtnStyle(primaryColor)}>+</button>
-            <button disabled={!inStock} onClick={handleAdd} style={{ flexShrink: 0, padding: '6px 11px', backgroundColor: inStock ? primaryColor : '#e2e8f0', color: inStock ? '#fff' : '#94a3b8', border: 'none', borderRadius: 9999, fontSize: 11, fontWeight: 700, cursor: inStock ? 'pointer' : 'not-allowed', whiteSpace: 'nowrap', transition: 'all 0.2s', boxShadow: inStock ? `0 3px 10px ${alpha(primaryColor, 0.28)}` : 'none', minWidth: '44px' }}>+ سلة</button>
+      <div className="product-body" style={{ padding: '12px 12px 14px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+        <h3 className="product-title" style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#0f172a', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '2.9em' }}>{product.title}</h3>
+        {product.description && <p className="product-description" style={{ margin: 0, fontSize: 11, color: '#64748b', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.description}</p>}
+        <div className="product-footer" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto', paddingTop: 10, borderTop: '1px solid #f1f5f9' }}>
+          <div className="product-price" style={{ lineHeight: 1 }}><span style={{ fontSize: 15, fontWeight: 800, color: primaryColor }}>{formatPrice(product.price)}</span><span style={{ fontSize: 10, color: '#94a3b8', marginRight: 2 }}>د.ج</span></div>
+          <div className="product-actions" style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            <button className="qty-btn qty-minus" disabled={!inStock} onClick={() => setQty((q) => Math.max(1, q - 1))} style={qtyBtnStyle(primaryColor)}>−</button>
+            <input className="qty-input" type="number" min="1" max={product.stock_quantity || 999} value={qty} onChange={(e) => setQty(Math.max(1, parseInt(e.target.value) || 1))} style={{ width: '36px', textAlign: 'center', fontSize: 13, fontWeight: 700, border: '1px solid #e2e8f0', borderRadius: 6, padding: '4px 0', background: '#f8fafc', color: '#0f172a' }} />
+            <button className="qty-btn qty-plus" disabled={!inStock} onClick={() => setQty((q) => q + 1)} style={qtyBtnStyle(primaryColor)}>+</button>
+            <button className="add-to-cart-btn" disabled={!inStock} onClick={handleAdd} style={{ flexShrink: 0, padding: '6px 11px', backgroundColor: inStock ? primaryColor : '#e2e8f0', color: inStock ? '#fff' : '#94a3b8', border: 'none', borderRadius: 9999, fontSize: 11, fontWeight: 700, cursor: inStock ? 'pointer' : 'not-allowed', whiteSpace: 'nowrap', transition: 'all 0.2s', boxShadow: inStock ? `0 3px 10px ${alpha(primaryColor, 0.28)}` : 'none', minWidth: '44px' }}>+ سلة</button>
           </div>
         </div>
       </div>
@@ -267,7 +315,7 @@ const qtyBtnStyle = (color) => ({
   width: 28, height: 28, borderRadius: '50%', border: `1.5px solid ${color}`, backgroundColor: 'transparent', color: color, fontSize: 16, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, lineHeight: 1, flexShrink: 0,
 });
 
-// ─── Cart Drawer ────────────────────────────────────────────────────────────
+// ─── Cart Drawer (تم إضافة كلاسات) ────────────────────────────────────────────
 function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, store }) {
   const [step, setStep] = useState('cart');
   const [form, setForm] = useState({ name: '', phone: '', address: '', email: '', wilaya: '', deliveryType: 'home', file: null });
@@ -330,7 +378,6 @@ function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, sto
       console.log('🆔 معرف الطلب:', insertedOrder.id);
       console.log('🏷️ رابط المتجر:', storeSlug);
 
-      // ─── إرسال إشعار عبر Netlify Proxy ──────────────────────────────────
       try {
         const proxyUrl = '/.netlify/functions/order-proxy';
         const response = await fetch(proxyUrl, {
@@ -370,33 +417,33 @@ function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, sto
 
   return (
     <>
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(4px)', zIndex: 1000 }} />
-      <div style={{ position: 'fixed', top: 0, left: 0, bottom: 0, width: '92vw', maxWidth: 400, backgroundColor: '#fff', zIndex: 1001, display: 'flex', flexDirection: 'column', boxShadow: '4px 0 40px rgba(0,0,0,0.12)', direction: 'rtl', animation: 'sfSlideIn 0.27s cubic-bezier(0.32,0.72,0,1)' }}>
-        <div style={{ padding: '16px 18px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 12, backgroundColor: '#fafbfc' }}>
-          <div style={{ width: 38, height: 38, borderRadius: 10, backgroundColor: alpha(primaryColor, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconCart size={20} color={primaryColor} /></div>
+      <div className="cart-overlay" onClick={onClose} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(4px)', zIndex: 1000 }} />
+      <div className="cart-drawer" style={{ position: 'fixed', top: 0, left: 0, bottom: 0, width: '92vw', maxWidth: 400, backgroundColor: '#fff', zIndex: 1001, display: 'flex', flexDirection: 'column', boxShadow: '4px 0 40px rgba(0,0,0,0.12)', direction: 'rtl', animation: 'sfSlideIn 0.27s cubic-bezier(0.32,0.72,0,1)' }}>
+        <div className="cart-header" style={{ padding: '16px 18px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 12, backgroundColor: '#fafbfc' }}>
+          <div className="cart-icon" style={{ width: 38, height: 38, borderRadius: 10, backgroundColor: alpha(primaryColor, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconCart size={20} color={primaryColor} /></div>
           <div style={{ flex: 1 }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#0f172a' }}>{step === 'cart' ? 'سلة التسوق' : step === 'checkout' ? 'بيانات الطلب' : 'تم استلام طلبك ✓'}</h3>
-            {step === 'cart' && count > 0 && <p style={{ margin: 0, fontSize: 11, color: '#94a3b8' }}>{count} منتج في السلة</p>}
+            <h3 className="cart-title" style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#0f172a' }}>{step === 'cart' ? 'سلة التسوق' : step === 'checkout' ? 'بيانات الطلب' : 'تم استلام طلبك ✓'}</h3>
+            {step === 'cart' && count > 0 && <p className="cart-count" style={{ margin: 0, fontSize: 11, color: '#94a3b8' }}>{count} منتج في السلة</p>}
           </div>
-          <button onClick={onClose} style={{ width: 32, height: 32, border: 'none', background: 'none', cursor: 'pointer', fontSize: 22, color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>×</button>
+          <button className="cart-close-btn" onClick={onClose} style={{ width: 32, height: 32, border: 'none', background: 'none', cursor: 'pointer', fontSize: 22, color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>×</button>
         </div>
-        <div style={{ flex: 1, overflowY: 'auto', padding: 18 }}>
+        <div className="cart-body" style={{ flex: 1, overflowY: 'auto', padding: 18 }}>
           {step === 'cart' && (cart.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '56px 20px', color: '#94a3b8' }}><div style={{ fontSize: 48, marginBottom: 10, opacity: 0.4 }}>🛒</div><p style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>السلة فارغة</p><p style={{ margin: '6px 0 0', fontSize: 13 }}>ابدأ بإضافة منتجات</p></div>
+            <div className="cart-empty" style={{ textAlign: 'center', padding: '56px 20px', color: '#94a3b8' }}><div style={{ fontSize: 48, marginBottom: 10, opacity: 0.4 }}>🛒</div><p style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>السلة فارغة</p><p style={{ margin: '6px 0 0', fontSize: 13 }}>ابدأ بإضافة منتجات</p></div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div className="cart-items" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {cart.map((item) => (
-                <div key={item.id} style={{ display: 'flex', gap: 12, padding: 12, backgroundColor: '#f8fafc', borderRadius: 12, border: '1px solid #f1f5f9' }}>
-                  {item.image_url && <img src={item.image_url} alt={item.title} style={{ width: 58, height: 58, objectFit: 'cover', borderRadius: 10, flexShrink: 0, border: '1px solid #e2e8f0' }} />}
+                <div key={item.id} className="cart-item" style={{ display: 'flex', gap: 12, padding: 12, backgroundColor: '#f8fafc', borderRadius: 12, border: '1px solid #f1f5f9' }}>
+                  {item.image_url && <img className="cart-item-image" src={item.image_url} alt={item.title} style={{ width: 58, height: 58, objectFit: 'cover', borderRadius: 10, flexShrink: 0, border: '1px solid #e2e8f0' }} />}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 700, color: '#0f172a', lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.title}</p>
-                    {item.is_digital && <p style={{ margin: '0 0 4px', fontSize: 11, color: '#2563eb', fontWeight: 600 }}>📱 رقمي</p>}
-                    <p style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 800, color: primaryColor }}>{formatPrice(item.price * item.qty)} د.ج</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <button onClick={() => updQty(item.id, -1)} style={qtyBtnStyle(primaryColor)}>−</button>
-                      <span style={{ fontSize: 14, fontWeight: 800, minWidth: 20, textAlign: 'center' }}>{item.qty}</span>
-                      <button onClick={() => updQty(item.id, 1)} style={qtyBtnStyle(primaryColor)}>+</button>
-                      <button onClick={() => removeItem(item.id)} style={{ marginRight: 'auto', background: 'none', border: 'none', color: '#ef4444', fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>× حذف</button>
+                    <p className="cart-item-title" style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 700, color: '#0f172a', lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.title}</p>
+                    {item.is_digital && <p className="cart-item-digital" style={{ margin: '0 0 4px', fontSize: 11, color: '#2563eb', fontWeight: 600 }}>📱 رقمي</p>}
+                    <p className="cart-item-price" style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 800, color: primaryColor }}>{formatPrice(item.price * item.qty)} د.ج</p>
+                    <div className="cart-item-actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <button className="qty-btn qty-minus" onClick={() => updQty(item.id, -1)} style={qtyBtnStyle(primaryColor)}>−</button>
+                      <span className="qty-value" style={{ fontSize: 14, fontWeight: 800, minWidth: 20, textAlign: 'center' }}>{item.qty}</span>
+                      <button className="qty-btn qty-plus" onClick={() => updQty(item.id, 1)} style={qtyBtnStyle(primaryColor)}>+</button>
+                      <button className="cart-item-remove" onClick={() => removeItem(item.id)} style={{ marginRight: 'auto', background: 'none', border: 'none', color: '#ef4444', fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>× حذف</button>
                     </div>
                   </div>
                 </div>
@@ -404,44 +451,44 @@ function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, sto
             </div>
           ))}
           {step === 'checkout' && (
-            <form id="sf-order-form" onSubmit={handleOrder} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <form id="sf-order-form" className="checkout-form" onSubmit={handleOrder} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {[{ label: 'الاسم الكامل', key: 'name', type: 'text', ph: 'أحمد محمد' }, { label: 'رقم الهاتف', key: 'phone', type: 'tel', ph: '0555 123 456' }].map((f) => (
-                <div key={f.key}>
+                <div key={f.key} className={`form-group form-group-${f.key}`}>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>{f.label}</label>
                   <input type={f.type} required placeholder={f.ph} value={form[f.key]} onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))} style={{ width: '100%', padding: '11px 13px', borderRadius: 10, border: '1.5px solid #e5e7eb', fontSize: 14, outline: 'none', boxSizing: 'border-box', direction: 'rtl', transition: 'border-color 0.2s' }} onFocus={(e) => (e.target.style.borderColor = primaryColor)} onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')} />
                 </div>
               ))}
-              <div>
+              <div className="form-group form-group-wilaya">
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>الولاية</label>
                 <select value={form.wilaya} onChange={(e) => setForm((p) => ({ ...p, wilaya: e.target.value }))} required style={{ width: '100%', padding: '11px 13px', borderRadius: 10, border: '1.5px solid #e5e7eb', fontSize: 14, outline: 'none', boxSizing: 'border-box', direction: 'rtl', backgroundColor: '#fff' }}>
                   <option value="">-- اختر الولاية --</option>
                   {ALGERIA_WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
                 </select>
               </div>
-              <div>
+              <div className="form-group form-group-delivery-type">
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>نوع العنوان</label>
                 <div style={{ display: 'flex', gap: 10 }}>
-                  <button type="button" onClick={() => setForm((p) => ({ ...p, deliveryType: 'home' }))} style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1.5px solid ${form.deliveryType === 'home' ? primaryColor : '#e5e7eb'}`, backgroundColor: form.deliveryType === 'home' ? alpha(primaryColor, 0.1) : '#f8fafc', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>🏠 منزل</button>
-                  <button type="button" onClick={() => setForm((p) => ({ ...p, deliveryType: 'office' }))} style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1.5px solid ${form.deliveryType === 'office' ? primaryColor : '#e5e7eb'}`, backgroundColor: form.deliveryType === 'office' ? alpha(primaryColor, 0.1) : '#f8fafc', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>🏢 مكتب</button>
+                  <button type="button" className={`delivery-type-btn ${form.deliveryType === 'home' ? 'active' : ''}`} onClick={() => setForm((p) => ({ ...p, deliveryType: 'home' }))} style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1.5px solid ${form.deliveryType === 'home' ? primaryColor : '#e5e7eb'}`, backgroundColor: form.deliveryType === 'home' ? alpha(primaryColor, 0.1) : '#f8fafc', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>🏠 منزل</button>
+                  <button type="button" className={`delivery-type-btn ${form.deliveryType === 'office' ? 'active' : ''}`} onClick={() => setForm((p) => ({ ...p, deliveryType: 'office' }))} style={{ flex: 1, padding: '8px', borderRadius: 8, border: `1.5px solid ${form.deliveryType === 'office' ? primaryColor : '#e5e7eb'}`, backgroundColor: form.deliveryType === 'office' ? alpha(primaryColor, 0.1) : '#f8fafc', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>🏢 مكتب</button>
                 </div>
               </div>
-              <div>
+              <div className="form-group form-group-address">
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>العنوان التفصيلي</label>
                 <input type="text" required placeholder="الشارع، الحي، البلدية..." value={form.address} onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))} style={{ width: '100%', padding: '11px 13px', borderRadius: 10, border: '1.5px solid #e5e7eb', fontSize: 14, outline: 'none', boxSizing: 'border-box', direction: 'rtl', transition: 'border-color 0.2s' }} onFocus={(e) => (e.target.style.borderColor = primaryColor)} onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')} />
               </div>
               {hasDigital && (
                 <>
-                  <div>
+                  <div className="form-group form-group-email">
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>البريد الإلكتروني (لتسليم المنتج الرقمي)</label>
                     <input type="email" required placeholder="example@mail.com" value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} style={{ width: '100%', padding: '11px 13px', borderRadius: 10, border: '1.5px solid #e5e7eb', fontSize: 14, outline: 'none', boxSizing: 'border-box', direction: 'ltr', transition: 'border-color 0.2s' }} onFocus={(e) => (e.target.style.borderColor = primaryColor)} onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')} />
                   </div>
-                  <div>
+                  <div className="form-group form-group-file">
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>رفع ملف (PDF أو صورة)</label>
                     <input type="file" accept=".pdf,.jpg,.png,.jpeg" onChange={(e) => setForm((p) => ({ ...p, file: e.target.files[0] }))} style={{ width: '100%', padding: '8px', borderRadius: 10, border: '1.5px solid #e5e7eb', fontSize: 14, background: '#fafbfc' }} />
                     <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>الحد الأقصى 10 ميجابايت.</p>
-                    {uploadError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>{uploadError}</p>}
+                    {uploadError && <p className="upload-error" style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>{uploadError}</p>}
                   </div>
-                  <div style={{ backgroundColor: '#eef2ff', borderRadius: 10, padding: 14, border: '1px solid #c7d2fe' }}>
+                  <div className="digital-payment-info" style={{ backgroundColor: '#eef2ff', borderRadius: 10, padding: 14, border: '1px solid #c7d2fe' }}>
                     <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#4338ca' }}>معلومات الدفع للمنتجات الرقمية:</p>
                     {store?.ccp_account && <p style={{ margin: '4px 0 0', fontSize: 13, color: '#1e293b' }}>CCP: {store.ccp_account}</p>}
                     {store?.mobile_payment && <p style={{ margin: '4px 0 0', fontSize: 13, color: '#1e293b' }}>رقم الهاتف: {store.mobile_payment}</p>}
@@ -449,7 +496,7 @@ function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, sto
                   </div>
                 </>
               )}
-              <div style={{ backgroundColor: '#f8fafc', borderRadius: 12, padding: 15, border: '1px solid #f1f5f9', marginTop: 4 }}>
+              <div className="cart-summary" style={{ backgroundColor: '#f8fafc', borderRadius: 12, padding: 15, border: '1px solid #f1f5f9', marginTop: 4 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b', marginBottom: 8 }}><span>عدد المنتجات</span><span style={{ fontWeight: 700 }}>{count}</span></div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b', marginBottom: 4 }}><span>مجموع المشتريات</span><span style={{ fontWeight: 700 }}>{formatPrice(total)} د.ج</span></div>
                 {form.wilaya && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b', marginBottom: 4 }}><span>سعر التوصيل ({form.deliveryType === 'home' ? 'منزل' : 'مكتب'})</span><span style={{ fontWeight: 700 }}>{deliveryPrice > 0 ? formatPrice(deliveryPrice) : 'مجاني'} د.ج</span></div>}
@@ -458,25 +505,25 @@ function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, sto
             </form>
           )}
           {step === 'success' && (
-            <div style={{ textAlign: 'center', padding: '52px 20px' }}>
+            <div className="cart-success" style={{ textAlign: 'center', padding: '52px 20px' }}>
               <div style={{ width: 76, height: 76, backgroundColor: '#ecfdf5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px', fontSize: 34 }}>🎉</div>
               <h3 style={{ margin: '0 0 8px', color: '#059669', fontSize: 20, fontWeight: 800 }}>تم استلام طلبك!</h3>
               <p style={{ margin: 0, color: '#64748b', fontSize: 14, lineHeight: 1.7 }}>سيتواصل معك فريقنا قريباً لتأكيد التوصيل.</p>
-              <button onClick={() => { setStep('cart'); onClose(); }} style={{ marginTop: 22, padding: '12px 32px', backgroundColor: primaryColor, color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 14px ${alpha(primaryColor, 0.32)}` }}>العودة للتسوق ←</button>
+              <button className="back-to-shop-btn" onClick={() => { setStep('cart'); onClose(); }} style={{ marginTop: 22, padding: '12px 32px', backgroundColor: primaryColor, color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 14px ${alpha(primaryColor, 0.32)}` }}>العودة للتسوق ←</button>
             </div>
           )}
         </div>
         {step !== 'success' && (
-          <div style={{ padding: '14px 18px', borderTop: '1px solid #f1f5f9', backgroundColor: '#fafbfc' }}>
+          <div className="cart-footer" style={{ padding: '14px 18px', borderTop: '1px solid #f1f5f9', backgroundColor: '#fafbfc' }}>
             {step === 'cart' ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}><span style={{ fontSize: 13, color: '#64748b' }}>الإجمالي</span><span style={{ fontSize: 19, fontWeight: 800, color: '#0f172a' }}>{formatPrice(total)} <span style={{ fontSize: 12, color: '#94a3b8' }}>د.ج</span></span></div>
-                <button disabled={cart.length === 0} onClick={() => setStep('checkout')} style={{ width: '100%', padding: 13, backgroundColor: cart.length ? primaryColor : '#e2e8f0', color: cart.length ? '#fff' : '#94a3b8', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: cart.length ? 'pointer' : 'not-allowed', boxShadow: cart.length ? `0 4px 16px ${alpha(primaryColor, 0.3)}` : 'none', transition: 'all 0.2s' }}>متابعة الطلب ←</button>
+                <button className="checkout-btn" disabled={cart.length === 0} onClick={() => setStep('checkout')} style={{ width: '100%', padding: 13, backgroundColor: cart.length ? primaryColor : '#e2e8f0', color: cart.length ? '#fff' : '#94a3b8', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: cart.length ? 'pointer' : 'not-allowed', boxShadow: cart.length ? `0 4px 16px ${alpha(primaryColor, 0.3)}` : 'none', transition: 'all 0.2s' }}>متابعة الطلب ←</button>
               </>
             ) : (
               <div style={{ display: 'flex', gap: 10 }}>
-                <button onClick={() => setStep('cart')} style={{ flex: 1, padding: 12, backgroundColor: '#f1f5f9', border: 'none', borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#374151' }}>→ رجوع</button>
-                <button type="submit" form="sf-order-form" disabled={submitting || fileUploading} style={{ flex: 2, padding: 12, backgroundColor: submitting || fileUploading ? '#94a3b8' : primaryColor, color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: submitting || fileUploading ? 'not-allowed' : 'pointer', boxShadow: submitting || fileUploading ? 'none' : `0 4px 14px ${alpha(primaryColor, 0.3)}` }}>{fileUploading ? 'جاري رفع الملف...' : submitting ? 'جاري الإرسال...' : 'تأكيد الطلب ✓'}</button>
+                <button className="back-btn" onClick={() => setStep('cart')} style={{ flex: 1, padding: 12, backgroundColor: '#f1f5f9', border: 'none', borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#374151' }}>→ رجوع</button>
+                <button type="submit" form="sf-order-form" className="submit-order-btn" disabled={submitting || fileUploading} style={{ flex: 2, padding: 12, backgroundColor: submitting || fileUploading ? '#94a3b8' : primaryColor, color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: submitting || fileUploading ? 'not-allowed' : 'pointer', boxShadow: submitting || fileUploading ? 'none' : `0 4px 14px ${alpha(primaryColor, 0.3)}` }}>{fileUploading ? 'جاري رفع الملف...' : submitting ? 'جاري الإرسال...' : 'تأكيد الطلب ✓'}</button>
               </div>
             )}
           </div>
@@ -487,7 +534,7 @@ function CartDrawer({ open, onClose, cart, setCart, primaryColor, storeSlug, sto
   );
 }
 
-// ─── Analytics Dashboard ────────────────────────────────────────────────────
+// ─── Analytics Dashboard (تم إضافة كلاسات) ────────────────────────────────────
 function AnalyticsDashboard({ storeSlug, primaryColor, onClose }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -510,32 +557,32 @@ function AnalyticsDashboard({ storeSlug, primaryColor, onClose }) {
     })();
   }, [storeSlug]);
 
-  if (loading) return <div style={{ padding: 20, textAlign: 'center' }}>جاري تحميل الإحصائيات...</div>;
-  if (error) return <div style={{ padding: 20, color: 'red' }}>خطأ: {error}</div>;
+  if (loading) return <div className="analytics-loading" style={{ padding: 20, textAlign: 'center' }}>جاري تحميل الإحصائيات...</div>;
+  if (error) return <div className="analytics-error" style={{ padding: 20, color: 'red' }}>خطأ: {error}</div>;
 
   const maxWilaya = Math.max(0, ...Object.values(stats.wilayaCounts));
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={onClose}>
-      <div style={{ backgroundColor: '#fff', borderRadius: 20, padding: '28px 24px', maxWidth: 600, width: '100%', maxHeight: '90vh', overflowY: 'auto', direction: 'rtl', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+    <div className="analytics-overlay" style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={onClose}>
+      <div className="analytics-modal" style={{ backgroundColor: '#fff', borderRadius: 20, padding: '28px 24px', maxWidth: 600, width: '100%', maxHeight: '90vh', overflowY: 'auto', direction: 'rtl', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={(e) => e.stopPropagation()}>
+        <div className="analytics-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#0f172a' }}>📊 إحصائيات المتجر</h2>
-          <button onClick={onClose} style={{ width: 32, height: 32, border: 'none', background: 'none', fontSize: 24, cursor: 'pointer', color: '#94a3b8' }}>×</button>
+          <button className="analytics-close-btn" onClick={onClose} style={{ width: 32, height: 32, border: 'none', background: 'none', fontSize: 24, cursor: 'pointer', color: '#94a3b8' }}>×</button>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
-          <div style={{ backgroundColor: '#f8fafc', borderRadius: 12, padding: 16, textAlign: 'center' }}><div style={{ fontSize: 28, fontWeight: 800, color: primaryColor }}>{stats.visits}</div><div style={{ fontSize: 13, color: '#64748b' }}>عدد الزيارات</div></div>
-          <div style={{ backgroundColor: '#f8fafc', borderRadius: 12, padding: 16, textAlign: 'center' }}><div style={{ fontSize: 28, fontWeight: 800, color: primaryColor }}>{stats.orders}</div><div style={{ fontSize: 13, color: '#64748b' }}>عدد الطلبات</div></div>
+        <div className="analytics-stats" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
+          <div className="stat-box" style={{ backgroundColor: '#f8fafc', borderRadius: 12, padding: 16, textAlign: 'center' }}><div style={{ fontSize: 28, fontWeight: 800, color: primaryColor }}>{stats.visits}</div><div style={{ fontSize: 13, color: '#64748b' }}>عدد الزيارات</div></div>
+          <div className="stat-box" style={{ backgroundColor: '#f8fafc', borderRadius: 12, padding: 16, textAlign: 'center' }}><div style={{ fontSize: 28, fontWeight: 800, color: primaryColor }}>{stats.orders}</div><div style={{ fontSize: 13, color: '#64748b' }}>عدد الطلبات</div></div>
         </div>
-        <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: '#0f172a' }}>الطلبات حسب الولاية</h3>
+        <h3 className="analytics-subtitle" style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: '#0f172a' }}>الطلبات حسب الولاية</h3>
         {Object.keys(stats.wilayaCounts).length === 0 ? (
           <p style={{ color: '#94a3b8', fontSize: 14 }}>لا توجد طلبات مسجلة بعد.</p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="wilaya-list" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {Object.entries(stats.wilayaCounts).sort((a, b) => b[1] - a[1]).map(([wilaya, count]) => (
-              <div key={wilaya} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: '100px', fontSize: 13, fontWeight: 500, color: '#334155', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{wilaya}</span>
-                <div style={{ flex: 1, height: 8, backgroundColor: '#e2e8f0', borderRadius: 999, overflow: 'hidden' }}><div style={{ height: '100%', width: `${maxWilaya > 0 ? (count / maxWilaya) * 100 : 0}%`, backgroundColor: primaryColor, borderRadius: 999, transition: 'width 0.4s' }} /></div>
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{count}</span>
+              <div key={wilaya} className="wilaya-item" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span className="wilaya-name" style={{ width: '100px', fontSize: 13, fontWeight: 500, color: '#334155', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{wilaya}</span>
+                <div className="wilaya-bar" style={{ flex: 1, height: 8, backgroundColor: '#e2e8f0', borderRadius: 999, overflow: 'hidden' }}><div style={{ height: '100%', width: `${maxWilaya > 0 ? (count / maxWilaya) * 100 : 0}%`, backgroundColor: primaryColor, borderRadius: 999, transition: 'width 0.4s' }} /></div>
+                <span className="wilaya-count" style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{count}</span>
               </div>
             ))}
           </div>
@@ -545,7 +592,7 @@ function AnalyticsDashboard({ storeSlug, primaryColor, onClose }) {
   );
 }
 
-// ─── المكوّن الرئيسي StoreFront ─────────────────────────────────────────────
+// ─── المكوّن الرئيسي StoreFront (تم إضافة كلاسات) ─────────────────────────────
 export default function StoreFront({ storeSlugProp, slug }) {
   const storeSlug = storeSlugProp || slug || slugFromUrl();
 
@@ -565,9 +612,28 @@ export default function StoreFront({ storeSlugProp, slug }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
-  const primaryColor = safeColor(store?.primary_color);
 
-  // ── تحميل بيانات المتجر والمنتجات ──
+  const templateSettings = store?.template_settings || {};
+  const templateId = templateSettings.templateId || 'default';
+  const templateColors = templateSettings.colors || {};
+  const templateFonts = templateSettings.fonts || {};
+
+  const primaryColor = safeColor(templateColors.primary || store?.primary_color);
+  const bgColor = templateColors.background || store?.bg_color || '#f8fafc';
+  const headingFont = templateFonts.heading || store?.font_family || 'system-ui';
+  const bodyFont = templateFonts.body || store?.font_family || 'system-ui';
+
+  useEffect(() => {
+    if (!templateId || templateId === 'default' || templateId === 'custom') return;
+    const linkId = `template-${templateId}`;
+    if (document.getElementById(linkId)) return;
+    const link = document.createElement('link');
+    link.id = linkId;
+    link.rel = 'stylesheet';
+    link.href = `/templates/${templateId}.css`;
+    document.head.appendChild(link);
+  }, [templateId]);
+
   useEffect(() => {
     if (!storeSlug) { setError('لم يتم تحديد المتجر'); setLoading(false); return; }
     (async () => {
@@ -586,15 +652,13 @@ export default function StoreFront({ storeSlugProp, slug }) {
     })();
   }, [storeSlug]);
 
-  // ── تطبيق الخط ──
   useEffect(() => {
-    if (!store?.font_family) return;
-    loadGoogleFont(store.font_family);
-    document.documentElement.style.fontFamily = store.font_family;
+    if (!headingFont || headingFont === 'system-ui') return;
+    loadGoogleFont(headingFont);
+    document.documentElement.style.fontFamily = bodyFont || headingFont;
     return () => { document.documentElement.style.fontFamily = ''; };
-  }, [store?.font_family]);
+  }, [headingFont, bodyFont]);
 
-  // ── تسجيل الزيارة (تجاهل أي خطأ) ──────────────────────────────────────
   useEffect(() => {
     if (!storeSlug) return;
     const logVisit = async () => {
@@ -606,19 +670,14 @@ export default function StoreFront({ storeSlugProp, slug }) {
         await supabase.from('visits').insert([
           { store_slug: storeSlug, visitor_ip: ip, user_agent: navigator.userAgent },
         ]);
-      } catch (e) {
-        // تجاهل جميع الأخطاء (409, 23505, network, etc.)
-        // لأن تسجيل الزيارة ليس حرجاً.
-      }
+      } catch (e) { /* تجاهل */ }
     };
     logVisit();
   }, [storeSlug]);
 
-  // ── Facebook Pixel ──
   useEffect(() => {
     if (!store?.facebook_pixel_id) return;
     if (document.getElementById('fb-pixel-script')) return;
-
     const script = document.createElement('script');
     script.id = 'fb-pixel-script';
     script.innerHTML = `
@@ -634,14 +693,12 @@ export default function StoreFront({ storeSlugProp, slug }) {
       fbq('track', 'PageView');
     `;
     document.head.appendChild(script);
-
     return () => {
       const el = document.getElementById('fb-pixel-script');
       if (el) document.head.removeChild(el);
     };
   }, [store?.facebook_pixel_id]);
 
-  // ── إضافة إلى السلة ──
   const addToCart = (product, qty = 1) => {
     setCart(prev => {
       const ex = prev.find(i => i.id === product.id);
@@ -652,7 +709,6 @@ export default function StoreFront({ storeSlugProp, slug }) {
     setTimeout(() => setCartBounce(false), 380);
   };
 
-  // ── الفئات ──
   const categories = ['all', ...Array.from(new Set(products.map(p => p.category).filter(Boolean)))];
   const filtered = products.filter(p => {
     const q = searchQuery.trim().toLowerCase();
@@ -670,9 +726,8 @@ export default function StoreFront({ storeSlugProp, slug }) {
     } else alert('كلمة المرور غير صحيحة.');
   };
 
-  // ── حالات التحميل والخطأ ──
   if (loading) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 14, fontFamily: 'system-ui', direction: 'rtl' }}>
+    <div className="store-loading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 14, fontFamily: 'system-ui', direction: 'rtl' }}>
       <div style={{ width: 34, height: 34, border: '3px solid #e2e8f0', borderTopColor: '#4f46e5', borderRadius: '50%', animation: 'sfSpin 0.8s linear infinite' }} />
       <p style={{ margin: 0, color: '#64748b', fontSize: 14 }}>جاري تحميل المتجر...</p>
       <style>{`@keyframes sfSpin { to { transform: rotate(360deg) } }`}</style>
@@ -680,108 +735,102 @@ export default function StoreFront({ storeSlugProp, slug }) {
   );
 
   if (error) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', direction: 'rtl' }}>
+    <div className="store-error" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', direction: 'rtl' }}>
       <div style={{ textAlign: 'center', padding: 32 }}><div style={{ fontSize: 52, marginBottom: 12 }}>😕</div><p style={{ color: '#64748b', fontSize: 15 }}>{error}</p></div>
     </div>
   );
 
   return (
-    <div style={{
+    <div className="store-root" style={{
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      backgroundColor: store?.bg_color || '#f8fafc',
+      backgroundColor: bgColor,
       backgroundImage: store?.bg_image_url?.trim() ? `url("${store.bg_image_url.trim()}")` : 'none',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
-      fontFamily: store?.font_family || 'system-ui',
+      fontFamily: bodyFont || headingFont || 'system-ui',
       direction: 'rtl',
     }}>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes sfSpin { to { transform: rotate(360deg) } }
         @keyframes sfSlideIn { from { transform: translateX(-100%) } to { transform: translateX(0) } }
-        .sf-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
-        @media (min-width: 500px)  { .sf-grid { gap: 14px; } }
-        @media (min-width: 700px)  { .sf-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
-        @media (min-width: 1024px) { .sf-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; } }
-        .sf-header { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 62px; }
-        @media (max-width: 540px) { .sf-header { flex-wrap: wrap; height: auto; padding: 10px 14px 10px; gap: 8px; } .sf-search { order: 3; flex: 0 0 100%; max-width: 100% !important; } }
-        .sf-cats { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
-        .sf-cats::-webkit-scrollbar { display: none; }
-        .sf-cat-pill { flex-shrink: 0; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; transition: all 0.18s; white-space: nowrap; background: none; font-family: inherit; }
-        .sf-search-input:focus { outline: none; }
+        .store-product-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+        @media (min-width: 500px)  { .store-product-grid { gap: 14px; } }
+        @media (min-width: 700px)  { .store-product-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
+        @media (min-width: 1024px) { .store-product-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; } }
+        .store-header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 62px; }
+        @media (max-width: 540px) { .store-header-inner { flex-wrap: wrap; height: auto; padding: 10px 14px 10px; gap: 8px; } .store-search-wrapper { order: 3; flex: 0 0 100%; max-width: 100% !important; } }
+        .store-categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+        .store-categories::-webkit-scrollbar { display: none; }
+        .store-category-btn { flex-shrink: 0; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; transition: all 0.18s; white-space: nowrap; background: none; font-family: inherit; }
+        .store-search-input:focus { outline: none; }
       `}</style>
 
-      {/* ── HEADER ── */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(226,232,240,0.7)', boxShadow: '0 1px 16px rgba(0,0,0,0.04)' }}>
-        <div className="sf-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0 }}>
+      <header className="store-header-wrapper" style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(226,232,240,0.7)', boxShadow: '0 1px 16px rgba(0,0,0,0.04)' }}>
+        <div className="store-header-inner">
+          <div className="store-logo" style={{ display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0 }}>
             <div style={{ width: 34, height: 34, borderRadius: 9, flexShrink: 0, background: `linear-gradient(135deg, ${primaryColor} 0%, ${alpha(primaryColor, 0.6)} 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800, boxShadow: `0 3px 10px ${alpha(primaryColor, 0.3)}` }}>{store?.store_name?.[0] || '🛍'}</div>
-            <span style={{ fontSize: 15, fontWeight: 800, color: '#0f172a', whiteSpace: 'nowrap', maxWidth: '30vw', overflow: 'hidden', textOverflow: 'ellipsis' }}>{store?.store_name}</span>
+            <span className="store-name" style={{ fontSize: 15, fontWeight: 800, color: '#0f172a', whiteSpace: 'nowrap', maxWidth: '30vw', overflow: 'hidden', textOverflow: 'ellipsis' }}>{store?.store_name}</span>
           </div>
-          <div className="sf-search" style={{ flex: 1, position: 'relative', maxWidth: 420 }}>
+          <div className="store-search-wrapper" style={{ flex: 1, position: 'relative', maxWidth: 420 }}>
             <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', display: 'flex' }}><IconSearch size={15} color={searchFocus ? primaryColor : '#94a3b8'} /></span>
-            <input className="sf-search-input" type="text" placeholder="ابحث عن منتج..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setSearchFocus(true)} onBlur={() => setSearchFocus(false)} style={{ width: '100%', padding: '9px 36px 9px 32px', border: `1.5px solid ${searchFocus ? primaryColor : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, backgroundColor: searchFocus ? '#fff' : '#f8fafc', color: '#0f172a', transition: 'all 0.2s', boxShadow: searchFocus ? `0 0 0 3px ${alpha(primaryColor, 0.1)}` : 'none', fontFamily: 'inherit' }} />
-            {searchQuery && <button onClick={() => setSearchQuery('')} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 17, lineHeight: 1, display: 'flex' }}>×</button>}
+            <input className="store-search-input" type="text" placeholder="ابحث عن منتج..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setSearchFocus(true)} onBlur={() => setSearchFocus(false)} style={{ width: '100%', padding: '9px 36px 9px 32px', border: `1.5px solid ${searchFocus ? primaryColor : '#e2e8f0'}`, borderRadius: 10, fontSize: 13, backgroundColor: searchFocus ? '#fff' : '#f8fafc', color: '#0f172a', transition: 'all 0.2s', boxShadow: searchFocus ? `0 0 0 3px ${alpha(primaryColor, 0.1)}` : 'none', fontFamily: 'inherit' }} />
+            {searchQuery && <button className="clear-search-btn" onClick={() => setSearchQuery('')} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 17, lineHeight: 1, display: 'flex' }}>×</button>}
           </div>
-          {store?.admin_password && <button onClick={() => setShowAnalytics(true)} style={{ flexShrink: 0, padding: '6px 12px', borderRadius: 8, border: '1px solid #e2e8f0', background: 'transparent', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#475569' }}>📊</button>}
-          <button onClick={() => setCartOpen(true)} aria-label="فتح سلة التسوق" style={{ position: 'relative', flexShrink: 0, width: 42, height: 42, borderRadius: 10, border: `1.5px solid ${alpha(primaryColor, 0.2)}`, backgroundColor: alpha(primaryColor, 0.06), cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', transform: cartBounce ? 'scale(1.2)' : 'scale(1)' }}>
+          {store?.admin_password && <button className="analytics-trigger-btn" onClick={() => setShowAnalytics(true)} style={{ flexShrink: 0, padding: '6px 12px', borderRadius: 8, border: '1px solid #e2e8f0', background: 'transparent', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#475569' }}>📊</button>}
+          <button className="store-cart-button" onClick={() => setCartOpen(true)} aria-label="فتح سلة التسوق" style={{ position: 'relative', flexShrink: 0, width: 42, height: 42, borderRadius: 10, border: `1.5px solid ${alpha(primaryColor, 0.2)}`, backgroundColor: alpha(primaryColor, 0.06), cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', transform: cartBounce ? 'scale(1.2)' : 'scale(1)' }}>
             {store?.cart_icon_url?.trim() ? <img src={store.cart_icon_url.trim()} alt="cart" style={{ width: 24, height: 24, objectFit: 'contain', display: 'block', border: 'none' }} onError={(e) => { e.target.style.display = 'none'; }} /> : <IconCart size={20} color={primaryColor} />}
-            {cartCount > 0 && <span style={{ position: 'absolute', top: -5, left: -5, backgroundColor: '#ef4444', color: '#fff', borderRadius: '50%', minWidth: 18, height: 18, fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #fff', boxShadow: '0 2px 6px rgba(239,68,68,0.4)', lineHeight: 1 }}>{cartCount > 99 ? '99+' : cartCount}</span>}
+            {cartCount > 0 && <span className="cart-badge" style={{ position: 'absolute', top: -5, left: -5, backgroundColor: '#ef4444', color: '#fff', borderRadius: '50%', minWidth: 18, height: 18, fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #fff', boxShadow: '0 2px 6px rgba(239,68,68,0.4)', lineHeight: 1 }}>{cartCount > 99 ? '99+' : cartCount}</span>}
           </button>
         </div>
       </header>
 
-      {/* ── HERO ── */}
       <HeroSlider store={store} primaryColor={primaryColor} />
 
-      {/* ── MAIN ── */}
-      <main style={{ flex: 1, maxWidth: 1200, margin: '0 auto', width: '100%', padding: 'clamp(16px,3vw,28px) clamp(12px,3vw,24px) 72px' }}>
+      <main className="store-main" style={{ flex: 1, maxWidth: 1200, margin: '0 auto', width: '100%', padding: 'clamp(16px,3vw,28px) clamp(12px,3vw,24px) 72px' }}>
         {categories.length > 1 && (
-          <div className="sf-cats" style={{ marginBottom: 20 }}>
+          <div className="store-categories" style={{ marginBottom: 20 }}>
             {categories.map(cat => {
               const active = activeCat === cat;
-              return <button key={cat} className="sf-cat-pill" onClick={() => setActiveCat(cat)} style={{ backgroundColor: active ? primaryColor : '#fff', color: active ? '#fff' : '#374151', borderColor: active ? primaryColor : '#e2e8f0', boxShadow: active ? `0 3px 10px ${alpha(primaryColor, 0.28)}` : '0 1px 3px rgba(0,0,0,0.04)' }}>{cat === 'all' ? '🛍 الكل' : cat}</button>;
+              return <button key={cat} className={`store-category-btn ${active ? 'active' : ''}`} onClick={() => setActiveCat(cat)} style={{ backgroundColor: active ? primaryColor : '#fff', color: active ? '#fff' : '#374151', borderColor: active ? primaryColor : '#e2e8f0', boxShadow: active ? `0 3px 10px ${alpha(primaryColor, 0.28)}` : '0 1px 3px rgba(0,0,0,0.04)' }}>{cat === 'all' ? '🛍 الكل' : cat}</button>;
             })}
           </div>
         )}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 18 }}>
-          <div><h2 style={{ margin: 0, fontSize: 'clamp(16px,3vw,20px)', fontWeight: 800, color: '#0f172a' }}>{searchQuery ? `نتائج "${searchQuery}"` : activeCat === 'all' ? 'جميع المنتجات' : activeCat}</h2><p style={{ margin: '3px 0 0', fontSize: 12, color: '#94a3b8' }}>{filtered.length} منتج</p></div>
-          <div style={{ width: 38, height: 3, backgroundColor: primaryColor, borderRadius: 9999, flexShrink: 0 }} />
+        <div className="store-section-header" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 18 }}>
+          <div><h2 className="store-section-title" style={{ margin: 0, fontSize: 'clamp(16px,3vw,20px)', fontWeight: 800, color: '#0f172a' }}>{searchQuery ? `نتائج "${searchQuery}"` : activeCat === 'all' ? 'جميع المنتجات' : activeCat}</h2><p className="store-product-count" style={{ margin: '3px 0 0', fontSize: 12, color: '#94a3b8' }}>{filtered.length} منتج</p></div>
+          <div className="store-accent-bar" style={{ width: 38, height: 3, backgroundColor: primaryColor, borderRadius: 9999, flexShrink: 0 }} />
         </div>
         {filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '64px 20px', color: '#94a3b8', backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: 18 }}><div style={{ fontSize: 44, marginBottom: 10, opacity: 0.45 }}>🔍</div><p style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>لا توجد منتجات تطابق بحثك</p></div>
+          <div className="no-results" style={{ textAlign: 'center', padding: '64px 20px', color: '#94a3b8', backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: 18 }}><div style={{ fontSize: 44, marginBottom: 10, opacity: 0.45 }}>🔍</div><p style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>لا توجد منتجات تطابق بحثك</p></div>
         ) : (
-          <div className="sf-grid">{filtered.map(p => <ProductCard key={p.id} product={p} primaryColor={primaryColor} onAddToCart={addToCart} />)}</div>
+          <div className="store-product-grid">{filtered.map(p => <ProductCard key={p.id} product={p} primaryColor={primaryColor} templateSettings={templateSettings} onAddToCart={addToCart} />)}</div>
         )}
       </main>
 
-      {/* ── FOOTER ── */}
-      <footer style={{ backgroundColor: '#1e293b', color: '#f1f5f9', padding: 'clamp(24px,4vw,40px) clamp(16px,4vw,32px)', direction: 'rtl' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+      <footer className="store-footer" style={{ backgroundColor: '#1e293b', color: '#f1f5f9', padding: 'clamp(24px,4vw,40px) clamp(16px,4vw,32px)', direction: 'rtl' }}>
+        <div className="store-footer-inner" style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
           {(store?.facebook_url || store?.whatsapp_url) && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 22 }}>
-              {store?.facebook_url && <a href={store.facebook_url} target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', transition: 'color 0.2s' }}><IconFacebook size={28} color="#94a3b8" /></a>}
-              {store?.whatsapp_url && <a href={store.whatsapp_url} target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', transition: 'color 0.2s' }}><IconWhatsApp size={28} color="#94a3b8" /></a>}
+            <div className="store-social-icons" style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 22 }}>
+              {store?.facebook_url && <a href={store.facebook_url} target="_blank" rel="noopener noreferrer" className="social-icon facebook-icon" style={{ color: '#94a3b8', transition: 'color 0.2s' }}><IconFacebook size={28} color="#94a3b8" /></a>}
+              {store?.whatsapp_url && <a href={store.whatsapp_url} target="_blank" rel="noopener noreferrer" className="social-icon whatsapp-icon" style={{ color: '#94a3b8', transition: 'color 0.2s' }}><IconWhatsApp size={28} color="#94a3b8" /></a>}
             </div>
           )}
-          {store?.store_policies?.trim() && <div style={{ marginBottom: 22 }}><h4 style={{ color: '#94a3b8', marginBottom: 10, fontSize: 14, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>سياسات المتجر</h4><p style={{ whiteSpace: 'pre-line', lineHeight: 1.75, margin: 0, opacity: 0.75, fontSize: 13 }}>{store.store_policies}</p></div>}
-          {store?.privacy_policy?.trim() && <div style={{ borderTop: '1px solid #334155', paddingTop: 22, marginBottom: 22 }}><h4 style={{ color: '#94a3b8', marginBottom: 10, fontSize: 14, fontWeight: 700 }}>سياسة الخصوصية</h4><p style={{ whiteSpace: 'pre-line', lineHeight: 1.75, margin: 0, opacity: 0.75, fontSize: 13 }}>{store.privacy_policy}</p></div>}
-          <div style={{ borderTop: '1px solid #334155', paddingTop: 18, opacity: 0.45, fontSize: 12 }}>© {new Date().getFullYear()} {store?.store_name}. جميع الحقوق محفوظة.</div>
+          {store?.store_policies?.trim() && <div className="store-policies" style={{ marginBottom: 22 }}><h4 className="policies-title" style={{ color: '#94a3b8', marginBottom: 10, fontSize: 14, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>سياسات المتجر</h4><p className="policies-text" style={{ whiteSpace: 'pre-line', lineHeight: 1.75, margin: 0, opacity: 0.75, fontSize: 13 }}>{store.store_policies}</p></div>}
+          {store?.privacy_policy?.trim() && <div className="store-privacy" style={{ borderTop: '1px solid #334155', paddingTop: 22, marginBottom: 22 }}><h4 className="privacy-title" style={{ color: '#94a3b8', marginBottom: 10, fontSize: 14, fontWeight: 700 }}>سياسة الخصوصية</h4><p className="privacy-text" style={{ whiteSpace: 'pre-line', lineHeight: 1.75, margin: 0, opacity: 0.75, fontSize: 13 }}>{store.privacy_policy}</p></div>}
+          <div className="store-copyright" style={{ borderTop: '1px solid #334155', paddingTop: 18, opacity: 0.45, fontSize: 12 }}>© {new Date().getFullYear()} {store?.store_name}. جميع الحقوق محفوظة.</div>
         </div>
       </footer>
 
-      {/* ── CART DRAWER ── */}
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} setCart={setCart} primaryColor={primaryColor} storeSlug={storeSlug} store={store} />
 
-      {/* ── ANALYTICS DASHBOARD ── */}
       {showAnalytics && (isAuthenticated ? (
         <AnalyticsDashboard storeSlug={storeSlug} primaryColor={primaryColor} onClose={() => { setShowAnalytics(false); setIsAuthenticated(false); }} />
       ) : (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={() => setShowAnalytics(false)}>
-          <div style={{ backgroundColor: '#fff', borderRadius: 20, padding: '28px 24px', maxWidth: 400, width: '100%', direction: 'rtl', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={(e) => e.stopPropagation()}>
+        <div className="analytics-overlay" style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={() => setShowAnalytics(false)}>
+          <div className="analytics-login-modal" style={{ backgroundColor: '#fff', borderRadius: 20, padding: '28px 24px', maxWidth: 400, width: '100%', direction: 'rtl', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={(e) => e.stopPropagation()}>
             <h3 style={{ margin: '0 0 12px', fontSize: 18, fontWeight: 800, color: '#0f172a' }}>🔐 أدخل كلمة المرور</h3>
             <form onSubmit={handleAnalyticsLogin}>
               <input type="password" placeholder="كلمة المرور" value={analyticsPassword} onChange={(e) => setAnalyticsPassword(e.target.value)} style={{ width: '100%', padding: '11px 13px', borderRadius: 10, border: '1.5px solid #e5e7eb', fontSize: 14, outline: 'none', boxSizing: 'border-box', marginBottom: 16 }} autoFocus />
