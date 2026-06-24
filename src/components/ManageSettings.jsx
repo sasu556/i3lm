@@ -5,15 +5,147 @@ import {
   Palette, Image as ImageIcon, Store, Loader as Loader2,
   Check, Type, CheckCheck, Plus, Trash2, Megaphone, Link as LinkIcon,
   Globe, Smartphone, Key, Map, House, BriefcaseBusiness, DollarSign,
-  FileText, Video,
+  FileText, Video, LayoutTemplate,
 } from 'lucide-react';
 import { ALGERIA_WILAYAS } from '../lib/constants';
 
+// ─── قائمة القوالب (مخزنة في ملفات ثابتة على Netlify) ────────────────────
+const TEMPLATES = [
+  // 1. التكنولوجيا
+  {
+    id: 'tech',
+    name: 'تكنولوجيا',
+    description: 'ألوان مستقبلية وخطوط عصرية لمتاجر الإلكترونيات',
+    preview: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+    css: '/templates/tech.css',
+    settings: {
+      colors: { primary: '#00d4ff', secondary: '#0a192f', background: '#0a192f' },
+      fonts: { heading: "'Orbitron', sans-serif", body: "'Exo 2', sans-serif" },
+      layout: { cardStyle: 'rounded-shadow', productGrid: '3cols' },
+    },
+  },
+  // 2. الهواتف
+  {
+    id: 'mobile',
+    name: 'متجر هواتف',
+    description: 'تصميم داكن مع لمسات زرقاء تقنية مثالي للهواتف',
+    preview: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop',
+    css: '/templates/mobile.css',
+    settings: {
+      colors: { primary: '#3b82f6', secondary: '#f1f5f9', background: '#0f172a' },
+      fonts: { heading: "'Inter', sans-serif", body: "'Inter', sans-serif" },
+      layout: { cardStyle: 'rounded-shadow', productGrid: '3cols' },
+    },
+  },
+  // 3. الأثاث
+  {
+    id: 'furniture',
+    name: 'أثاث',
+    description: 'درجات خشبية دافئة وخطوط كلاسيكية تناسب الأثاث المنزلي',
+    preview: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop',
+    css: '/templates/furniture.css',
+    settings: {
+      colors: { primary: '#8b5a2b', secondary: '#4a3622', background: '#fdf6e3' },
+      fonts: { heading: "'Playfair Display', serif", body: "'Lora', serif" },
+      layout: { cardStyle: 'rounded', productGrid: '2cols' },
+    },
+  },
+  // 4. ألعاب الأطفال
+  {
+    id: 'kids',
+    name: 'ألعاب أطفال',
+    description: 'ألوان زاهية وخطوط مرحة تناسب منتجات الأطفال',
+    preview: 'https://i.postimg.cc/9Q9Z7csR/50fc3009d21eb98692a06e62e936882c.jpg',
+    css: '/templates/kids.css',
+    settings: {
+      colors: { primary: '#f43f5e', secondary: '#fbbf24', background: '#fff7ed' },
+      fonts: { heading: "'Bubblegum Sans', cursive", body: "'Comic Neue', cursive" },
+      layout: { cardStyle: 'rounded-shadow', productGrid: '3cols' },
+    },
+  },
+  // 5. الكتب الرقمية
+  {
+    id: 'ebooks',
+    name: 'كتب رقمية',
+    description: 'تصميم بسيط وراقي يليق بالقراءة الإلكترونية',
+    preview: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=300&fit=crop',
+    css: '/templates/ebooks.css',
+    settings: {
+      colors: { primary: '#2563eb', secondary: '#1e293b', background: '#f8fafc' },
+      fonts: { heading: "'Merriweather', serif", body: "'Source Serif Pro', serif" },
+      layout: { cardStyle: 'none', productGrid: '4cols' },
+    },
+  },
+  // 6. الكتب المادية
+  {
+    id: 'books',
+    name: 'كتب ورقية',
+    description: 'أجواء مكتبة كلاسيكية مع ألوان دافئة وخطوط تقليدية',
+    preview: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop',
+    css: '/templates/books.css',
+    settings: {
+      colors: { primary: '#92400e', secondary: '#451a03', background: '#fffbeb' },
+      fonts: { heading: "'Libre Baskerville', serif", body: "'Crimson Text', serif" },
+      layout: { cardStyle: 'square', productGrid: '2cols' },
+    },
+  },
+  // 7. التطبيقات
+  {
+    id: 'apps',
+    name: 'تطبيقات',
+    description: 'واجهة نظيفة بألوان متدرجة وخطوط حديثة لعرض التطبيقات',
+    preview: 'https://i.postimg.cc/8zLfCtrn/Google-Play-App-Store-Icons-Editorial-Image-Illustration-of-global-game-159029210.jpg',
+    css: '/templates/apps.css',
+    settings: {
+      colors: { primary: '#7c3aed', secondary: '#4c1d95', background: '#ffffff' },
+      fonts: { heading: "'Poppins', sans-serif", body: "'Nunito', sans-serif" },
+      layout: { cardStyle: 'rounded', productGrid: '3cols' },
+    },
+  },
+  // 8. الألعاب (الإلكترونية)
+  {
+    id: 'games',
+    name: 'ألعاب',
+    description: 'طابع ألعاب فيديو داكن مع لمسات نيون مشعة',
+    preview: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop',
+    css: '/templates/games.css',
+    settings: {
+      colors: { primary: '#a855f7', secondary: '#c084fc', background: '#0f0f0f' },
+      fonts: { heading: "'Press Start 2P', cursive", body: "'Rajdhani', sans-serif" },
+      layout: { cardStyle: 'none', productGrid: '3cols' },
+    },
+  },
+  // 9. الاشتراكات الرقمية
+  {
+    id: 'subscriptions',
+    name: 'اشتراكات',
+    description: 'تصميم احترافي مع خطوط نظيفة مثالي لخدمات الاشتراك',
+    preview: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop',
+    css: '/templates/subscriptions.css',
+    settings: {
+      colors: { primary: '#059669', secondary: '#064e3b', background: '#ecfdf5' },
+      fonts: { heading: "'Inter', sans-serif", body: "'Inter', sans-serif" },
+      layout: { cardStyle: 'rounded-shadow', productGrid: '3cols' },
+    },
+  },
+];
+
+const CUSTOM_TEMPLATE = {
+  id: 'custom',
+  name: 'مخصص',
+  description: 'استخدم الإعدادات الحالية الخاصة بك',
+  preview: 'https://i.postimg.cc/0QbR2XHn/8825fb307053b1bb4693bfbd458ce9d2.jpg',
+  css: null,
+  settings: null,
+};
+
 const FONT_OPTIONS = [
-  { value: 'system-ui',              label: 'System UI (الافتراضي)', preview: '—' },
-  { value: "'Cairo', sans-serif",    label: 'Cairo (كاير)',           preview: 'تجربة النص' },
-  { value: "'Tajawal', sans-serif",  label: 'Tajawal (تجوال)',        preview: 'تجربة النص' },
-  { value: "'Inter', sans-serif",    label: 'Inter (إنتر)',           preview: 'Sample text' },
+  { value: 'system-ui', label: 'System UI (الافتراضي)' },
+  { value: "'Cairo', sans-serif", label: 'Cairo (كاير)' },
+  { value: "'Tajawal', sans-serif", label: 'Tajawal (تجوال)' },
+  { value: "'Inter', sans-serif", label: 'Inter (إنتر)' },
+  { value: "'Merriweather', serif", label: 'Merriweather' },
+  { value: "'Lora', serif", label: 'Lora' },
 ];
 
 // ─── مدير البنرات ────────────────────────────────────────────────────────────
@@ -171,7 +303,7 @@ export default function ManageSettings({ storeSlug }) {
   const [loading, setLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
 
-  // الحقول الأساسية
+  // ─── الحقول الأساسية ──────────────────────────────────────────────────────
   const [storeName, setStoreName] = useState('');
   const [primaryColor, setPrimaryColor] = useState('#4f46e5');
   const [bgColor, setBgColor] = useState('#f9fafb');
@@ -179,67 +311,119 @@ export default function ManageSettings({ storeSlug }) {
   const [fontFamily, setFontFamily] = useState('system-ui');
   const [bannerUrls, setBannerUrls] = useState([]);
 
-  // الحقول الأخرى
+  // ─── الحقول الأخرى ──────────────────────────────────────────────────────
   const [facebookUrl, setFacebookUrl] = useState('');
   const [whatsappUrl, setWhatsappUrl] = useState('');
   const [ccpAccount, setCcpAccount] = useState('');
   const [mobilePayment, setMobilePayment] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [deliveryPrices, setDeliveryPrices] = useState({});
-  
-  // حقل Google Script (VIP)
   const [googleScriptUrl, setGoogleScriptUrl] = useState('');
-  
-  // حقل Facebook Pixel
   const [facebookPixelId, setFacebookPixelId] = useState('');
-
-  // الحقول الجديدة
   const [storePolicies, setStorePolicies] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState('');
   const [bannerVideoUrl, setBannerVideoUrl] = useState('');
+
+  // ─── القوالب ──────────────────────────────────────────────────────────────
+  const [selectedTemplateId, setSelectedTemplateId] = useState('default');
+  const [templateSettings, setTemplateSettings] = useState(null);
+  const [showTemplateGallery, setShowTemplateGallery] = useState(false);
 
   // ─── تغيير رابط المتجر ──────────────────────────────────────────────────
   const [newSlug, setNewSlug] = useState('');
   const [changingSlug, setChangingSlug] = useState(false);
 
-  // ── جلب الإعدادات ──
+  // ── جلب الإعدادات (مع تجاهل الأخطاء) ──
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('stores')
-          .select('store_name, primary_color, bg_color, bg_image_url, font_family, banner_urls, facebook_url, whatsapp_url, ccp_account, mobile_payment, admin_password, delivery_prices, google_script_url, facebook_pixel_id, store_policies, privacy_policy, banner_video_url')
-          .eq('store_slug', storeSlug)
-          .maybeSingle();
-
-        if (error) throw error;
-        if (data) {
-          setStoreName(data.store_name || '');
-          setPrimaryColor(data.primary_color || '#4f46e5');
-          setBgColor(data.bg_color || '#f9fafb');
-          setBgImageUrl(data.bg_image_url || '');
-          setFontFamily(data.font_family || 'system-ui');
-          setBannerUrls(Array.isArray(data.banner_urls) ? data.banner_urls : []);
-          setFacebookUrl(data.facebook_url || '');
-          setWhatsappUrl(data.whatsapp_url || '');
-          setCcpAccount(data.ccp_account || '');
-          setMobilePayment(data.mobile_payment || '');
-          setAdminPassword(data.admin_password || '');
-          setDeliveryPrices(data.delivery_prices || {});
-          setGoogleScriptUrl(data.google_script_url || '');
-          setFacebookPixelId(data.facebook_pixel_id || '');
-          setStorePolicies(data.store_policies || '');
-          setPrivacyPolicy(data.privacy_policy || '');
-          setBannerVideoUrl(data.banner_video_url || '');
-        }
-      } catch (err) {
-        console.error('خطأ في جلب الإعدادات:', err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (storeSlug) fetchSettings();
+    if (storeSlug) {
+      fetchSettings();
+    } else {
+      setLoading(false);
+    }
   }, [storeSlug]);
+
+  const fetchSettings = async () => {
+    console.log('🔍 storeSlug:', storeSlug);
+    try {
+      // ─── استخدم select('*') لتجنب مشاكل الأعمدة غير الموجودة ───
+      const { data, error } = await supabase
+        .from('stores')
+        .select('*')
+        .eq('store_slug', storeSlug)
+        .maybeSingle();
+
+      if (error) {
+        console.error('❌ خطأ في جلب البيانات:', error);
+        throw error;
+      }
+
+      if (data) {
+        console.log('✅ البيانات المستلمة:', data);
+        setStoreName(data.store_name || '');
+        setPrimaryColor(data.primary_color || '#4f46e5');
+        setBgColor(data.bg_color || '#f9fafb');
+        setBgImageUrl(data.bg_image_url || '');
+        setFontFamily(data.font_family || 'system-ui');
+        setBannerUrls(Array.isArray(data.banner_urls) ? data.banner_urls : []);
+        setFacebookUrl(data.facebook_url || '');
+        setWhatsappUrl(data.whatsapp_url || '');
+        setCcpAccount(data.ccp_account || '');
+        setMobilePayment(data.mobile_payment || '');
+        setAdminPassword(data.admin_password || '');
+        setDeliveryPrices(data.delivery_prices || {});
+        setGoogleScriptUrl(data.google_script_url || '');
+        setFacebookPixelId(data.facebook_pixel_id || '');
+        setStorePolicies(data.store_policies || '');
+        setPrivacyPolicy(data.privacy_policy || '');
+        setBannerVideoUrl(data.banner_video_url || '');
+
+        // ─── التعامل مع template_settings (إذا كان موجوداً) ───
+        if (data.template_settings) {
+          const settings = data.template_settings;
+          setSelectedTemplateId(settings.templateId || 'default');
+          setTemplateSettings(settings);
+          if (settings.templateId !== 'custom' && settings.colors) {
+            setPrimaryColor(settings.colors.primary || '#4f46e5');
+            setBgColor(settings.colors.background || '#f9fafb');
+            setFontFamily(settings.fonts?.heading || 'system-ui');
+          }
+        } else {
+          setSelectedTemplateId('default');
+          setTemplateSettings(null);
+        }
+      } else {
+        console.warn('⚠️ لا توجد بيانات للمتجر:', storeSlug);
+      }
+    } catch (err) {
+      console.error('❌ خطأ في جلب الإعدادات:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ── تطبيق قالب ──
+  const applyTemplate = (templateId) => {
+    if (templateId === 'custom') {
+      setSelectedTemplateId('custom');
+      setTemplateSettings({ templateId: 'custom' });
+      return;
+    }
+
+    const template = TEMPLATES.find(t => t.id === templateId);
+    if (!template) return;
+
+    const settings = template.settings;
+    setSelectedTemplateId(templateId);
+    setTemplateSettings({ templateId, ...settings });
+
+    if (settings.colors) {
+      setPrimaryColor(settings.colors.primary || '#4f46e5');
+      setBgColor(settings.colors.background || '#f9fafb');
+    }
+    if (settings.fonts) {
+      setFontFamily(settings.fonts.heading || 'system-ui');
+    }
+  };
 
   // ── حفظ الإعدادات ──
   const handleSaveSettings = async (e) => {
@@ -247,6 +431,25 @@ export default function ManageSettings({ storeSlug }) {
     setSaveLoading(true);
     try {
       const cleanBanners = bannerUrls.filter(u => u.trim() !== '');
+
+      let templateSettingsToSave = null;
+      if (selectedTemplateId === 'custom') {
+        templateSettingsToSave = {
+          templateId: 'custom',
+          colors: { primary: primaryColor, background: bgColor },
+          fonts: { heading: fontFamily, body: fontFamily },
+        };
+      } else {
+        const template = TEMPLATES.find(t => t.id === selectedTemplateId);
+        if (template) {
+          templateSettingsToSave = {
+            templateId: selectedTemplateId,
+            colors: { primary: primaryColor, background: bgColor },
+            fonts: { heading: fontFamily, body: fontFamily },
+          };
+        }
+      }
+
       const { error } = await supabase
         .from('stores')
         .update({
@@ -267,6 +470,7 @@ export default function ManageSettings({ storeSlug }) {
           store_policies: storePolicies,
           privacy_policy: privacyPolicy,
           banner_video_url: bannerVideoUrl,
+          template_settings: templateSettingsToSave,
         })
         .eq('store_slug', storeSlug);
 
@@ -289,7 +493,6 @@ export default function ManageSettings({ storeSlug }) {
       return alert('الرابط يجب أن يحتوي فقط على أحرف إنجليزية وأرقام و _ و -');
     }
 
-    // التحقق من عدم استخدام الرابط
     const { data: existing } = await supabase
       .from('stores')
       .select('store_slug')
@@ -302,14 +505,12 @@ export default function ManageSettings({ storeSlug }) {
 
     setChangingSlug(true);
     try {
-      // 1. تحديث جدول المتجر
       const { error: storeErr } = await supabase
         .from('stores')
         .update({ store_slug: slug })
         .eq('store_slug', storeSlug);
       if (storeErr) throw storeErr;
 
-      // 2. تحديث الجداول المرتبطة
       const tables = ['orders', 'visits', 'products'];
       for (const table of tables) {
         const { error } = await supabase
@@ -361,6 +562,77 @@ export default function ManageSettings({ storeSlug }) {
           </div>
         </div>
 
+        {/* ─── معرض القوالب ────────────────────────────────────────────────── */}
+        <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <SectionLabel icon={<LayoutTemplate size={15} />} label="القوالب الجاهزة" />
+            <button
+              type="button"
+              onClick={() => setShowTemplateGallery(!showTemplateGallery)}
+              style={{
+                padding: '6px 14px',
+                backgroundColor: theme.colors.accentSoft,
+                color: theme.colors.accent,
+                border: 'none',
+                borderRadius: theme.radius.pill,
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: 600,
+              }}
+            >
+              {showTemplateGallery ? 'إخفاء' : 'عرض القوالب'}
+            </button>
+          </div>
+          <p style={{ margin: '4px 0 0', fontSize: '12px', color: theme.colors.textSubtle }}>
+            اختر قالباً جاهزاً لتغيير مظهر متجرك بسرعة. يمكنك أيضاً تخصيص الألوان والخطوط يدوياً.
+          </p>
+
+          {showTemplateGallery && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px', marginTop: '8px' }}>
+              {[...TEMPLATES, CUSTOM_TEMPLATE].map(template => {
+                const isSelected = selectedTemplateId === template.id;
+                return (
+                  <div
+                    key={template.id}
+                    onClick={() => applyTemplate(template.id)}
+                    style={{
+                      border: `2px solid ${isSelected ? theme.colors.accent : '#e2e8f0'}`,
+                      borderRadius: theme.radius.md,
+                      padding: '12px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      backgroundColor: isSelected ? theme.colors.accentSoft : '#fff',
+                    }}
+                  >
+                    <img
+                      src={template.preview}
+                      alt={template.name}
+                      style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: theme.radius.sm }}
+                    />
+                    <h4 style={{ margin: '8px 0 4px', fontSize: '14px', fontWeight: 700, color: theme.colors.text }}>
+                      {template.name}
+                    </h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: theme.colors.textSubtle }}>
+                      {template.description}
+                    </p>
+                    {isSelected && (
+                      <span style={{ display: 'block', marginTop: '6px', fontSize: '10px', color: theme.colors.accent, fontWeight: 700 }}>
+                        ✓ مختار
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {selectedTemplateId !== 'custom' && selectedTemplateId !== 'default' && (
+            <div style={{ marginTop: '8px', padding: '8px 12px', backgroundColor: '#eef2ff', borderRadius: theme.radius.sm, fontSize: '12px', color: '#4338ca' }}>
+              💡 قالب "{TEMPLATES.find(t => t.id === selectedTemplateId)?.name}" مفعّل. يمكنك تعديل الألوان والخطوط يدوياً أدناه.
+            </div>
+          )}
+        </div>
+
         {/* الألوان */}
         <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <SectionLabel icon={<Palette size={15} />} label="الألوان" />
@@ -388,11 +660,11 @@ export default function ManageSettings({ storeSlug }) {
               const isSelected = fontFamily === font.value;
               return (
                 <button key={font.value} type="button" onClick={() => setFontFamily(font.value)} style={fontOptionBtn(isSelected)}>
-                  <span style={{ fontFamily: font.value, fontSize: '15px', fontWeight: isSelected ? 700 : 500, color: isSelected ? theme.colors.accent : theme.colors.text }}>{font.label}</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    {font.preview !== '—' && <span style={{ fontFamily: font.value, fontSize: '14px', color: theme.colors.textSubtle }}>{font.preview}</span>}
-                    {isSelected && <CheckCheck size={16} color={theme.colors.accent} />}
-                  </div>
+                  <span style={{ fontFamily: font.value, fontSize: '14px', fontWeight: isSelected ? 700 : 500, color: isSelected ? theme.colors.accent : theme.colors.text }}>
+                    {font.label}
+                  </span>
+                  <span style={{ fontFamily: font.value, fontSize: '12px', color: theme.colors.textSubtle }}>تجربة النص</span>
+                  {isSelected && <CheckCheck size={16} color={theme.colors.accent} />}
                 </button>
               );
             })}
@@ -402,7 +674,7 @@ export default function ManageSettings({ storeSlug }) {
         {/* البنرات */}
         <BannerManager bannerUrls={bannerUrls} onChange={setBannerUrls} />
 
-        {/* ─── فيديو البنر ─── */}
+        {/* فيديو البنر */}
         <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <SectionLabel icon={<Video size={15} />} label="فيديو البنر (خلفية متحركة)" />
           <p style={{ margin: 0, color: theme.colors.textSubtle, fontSize: '12px' }}>
@@ -465,7 +737,7 @@ export default function ManageSettings({ storeSlug }) {
         {/* أسعار التوصيل */}
         <DeliveryManager deliveryPrices={deliveryPrices} onChange={setDeliveryPrices} />
 
-        {/* ─── سياسات المتجر ─── */}
+        {/* سياسات المتجر */}
         <div style={{ ...cardStyle, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <SectionLabel icon={<FileText size={15} />} label="سياسات المتجر" />
           <p style={{ margin: 0, color: theme.colors.textSubtle, fontSize: '12px' }}>
@@ -619,14 +891,17 @@ function ColorPicker({ label, value, onChange, withBorder = false }) {
 const iconRight = { position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' };
 const iconWrap = (bg, color) => ({ width: '34px', height: '34px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: bg, color, borderRadius: theme.radius.sm, flexShrink: 0 });
 const deleteBtn = { width: '36px', height: '36px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.dangerSoft, color: theme.colors.danger, border: 'none', borderRadius: theme.radius.sm, cursor: 'pointer', transition: theme.transition };
+
 function fontOptionBtn(isSelected) {
   return {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', padding: '13px 16px',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', padding: '10px 14px',
     backgroundColor: isSelected ? theme.colors.accentSoft : theme.colors.bg,
     border: `1px solid ${isSelected ? theme.colors.accent : theme.colors.border}`,
     borderRadius: theme.radius.md, cursor: 'pointer', transition: theme.transition, textAlign: 'right',
+    width: '100%',
   };
 }
+
 function primaryBtn(disabled) {
   return {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
