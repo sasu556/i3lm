@@ -1,0 +1,29 @@
+/* اشتراكات - احترافية */
+body { background:#ecfdf5; color:#064e3b; }
+.store-header-wrapper { background:#fff; border-bottom:1px solid #a7f3d0; }
+
+.product-card {
+  background: #fff;
+  border: 1px solid #d1fae5;
+  border-radius: 16px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(5,150,105,0.05);
+  transition: 0.25s;
+}
+.product-card::before {
+  content: '';
+  display: block;
+  height: 6px;
+  background: linear-gradient(90deg, #059669, #10b981);
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(5,150,105,0.12);
+}
+.product-image { border-radius: 0 !important; }
+.product-title { font-weight: 700 !important; color: #064e3b !important; }
+.add-to-cart-btn { background: #059669 !important; border-radius: 12px !important; font-weight: 700; }
+
+.store-category-btn { background:#d1fae5!important; border-color:#a7f3d0!important; color:#065f46!important; border-radius:14px; }
+.store-category-btn.active { background:#059669!important; color:#fff!important; }
+.store-footer { background:#d1fae5!important; border-top:1px solid #a7f3d0; color:#064e3b!important; }

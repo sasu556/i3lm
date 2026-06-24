@@ -1,0 +1,23 @@
+/* أثاث - بطاقات بإطار خشبي */
+body { background:#fdf6e3; color:#4a3622; }
+.store-header-wrapper { background:rgba(253,246,227,0.9)!important; border-bottom:2px solid rgba(139,90,43,0.2); }
+
+.product-card {
+  background: #fff;
+  border: 3px solid #d4a373 !important;
+  border-radius: 12px !important;
+  box-shadow: 5px 5px 0px rgba(139,90,43,0.1);
+  transition: 0.25s;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 8px 8px 0px rgba(139,90,43,0.2);
+  border-color: #8b5a2b !important;
+}
+.product-image { border-radius: 10px 10px 0 0 !important; }
+.product-title { font-family: 'Playfair Display', serif !important; color:#4a3622 !important; }
+.add-to-cart-btn { background: #8b5a2b !important; border-radius: 8px !important; }
+
+.store-category-btn { background:rgba(255,248,235,0.8)!important; border-color:rgba(139,90,43,0.25)!important; color:#6b4d2e!important; border-radius:8px; }
+.store-category-btn.active { background:#8b5a2b!important; color:#fff!important; }
+.store-footer { background:#f4ebd0!important; border-top:1px solid rgba(139,90,43,0.2); color:#4a3622!important; }

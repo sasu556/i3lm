@@ -1,0 +1,24 @@
+/* تطبيقات - زجاجي مع تدرجات */
+body { background: linear-gradient(135deg, #f5f3ff, #ede9fe); color:#4c1d95; }
+.store-header-wrapper { background:rgba(255,255,255,0.8)!important; backdrop-filter:blur(20px); border-bottom:1px solid rgba(124,58,237,0.15); }
+
+.product-card {
+  background: rgba(255,255,255,0.7) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.8) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 8px 32px rgba(124,58,237,0.08);
+  transition: 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(124,58,237,0.15);
+  border-color: rgba(124,58,237,0.4) !important;
+}
+.product-image { border-radius: 24px 24px 0 0 !important; }
+.product-title { font-weight: 700 !important; color: #4c1d95 !important; }
+.add-to-cart-btn { background: linear-gradient(135deg, #7c3aed, #a855f7) !important; border-radius: 30px !important; }
+
+.store-category-btn { background:rgba(255,255,255,0.7)!important; backdrop-filter:blur(8px); border-color:rgba(124,58,237,0.2)!important; color:#6d28d9!important; border-radius:20px; }
+.store-category-btn.active { background:#7c3aed!important; color:#fff!important; }
+.store-footer { background:#ede9fe!important; border-top:1px solid rgba(124,58,237,0.15); color:#4c1d95!important; }

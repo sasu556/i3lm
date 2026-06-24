@@ -1,0 +1,62 @@
+body {
+  background: #fffbeb !important;
+}
+
+.product-card {
+  border-radius: 12px !important;
+  border: 1px solid #fed7aa !important;
+  background: #ffffff !important;
+}
+
+.product-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.12) !important;
+}
+
+.product-card .product-title {
+  font-family: 'Cairo', sans-serif !important;
+  color: #451a03 !important;
+}
+
+.product-card .product-price {
+  color: #ea580c !important;
+}
+
+.sf-header {
+  background: rgba(255, 251, 235, 0.95) !important;
+  border-bottom: 2px solid #ea580c !important;
+}
+
+.sf-header .store-name {
+  color: #451a03 !important;
+}
+
+.sf-cat-pill {
+  font-family: 'Cairo', sans-serif !important;
+  border-radius: 9999px !important;
+  background: #ffedd5 !important;
+  border-color: #fed7aa !important;
+  color: #451a03 !important;
+}
+
+.sf-cat-pill.active {
+  background: #ea580c !important;
+  color: #fff !important;
+  border-color: #ea580c !important;
+}
+
+.sf-search-input {
+  border-radius: 9999px !important;
+  background: #fff !important;
+  border-color: #fed7aa !important;
+}
+
+.add-to-cart {
+  border-radius: 9999px !important;
+  font-family: 'Cairo', sans-serif !important;
+}
+
+footer {
+  background: #451a03 !important;
+  color: #ffedd5 !important;
+}

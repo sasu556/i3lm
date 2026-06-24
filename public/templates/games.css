@@ -1,0 +1,31 @@
+/* ألعاب - نيون داكن */
+body { background:#0f0f0f; color:#e2e8f0; font-family: 'Rajdhani', sans-serif; }
+.store-header-wrapper { background:rgba(15,15,15,0.95)!important; border-bottom:2px solid #a855f7; }
+
+.product-card {
+  background: #1a1a2e;
+  border: 2px solid #a855f7 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 15px rgba(168,85,247,0.3);
+  transition: 0.2s;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 95%, 95% 100%, 0% 100%);
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(168,85,247,0.6), 0 0 60px rgba(168,85,247,0.2);
+  border-color: #c084fc !important;
+}
+.product-image { border-radius: 0 !important; filter: brightness(0.9) contrast(1.1); }
+.product-card:hover .product-image { filter: brightness(1.1) contrast(1.2); }
+.product-title { font-family: 'Press Start 2P', cursive !important; font-size: 10px !important; color: #c084fc !important; line-height: 1.6 !important; }
+.add-to-cart-btn {
+  background: #a855f7 !important;
+  border-radius: 0 !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 9px !important;
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+.store-category-btn { background:#16213e!important; border:2px solid #a855f7!important; color:#c084fc!important; border-radius:0; font-family:'Press Start 2P',cursive; font-size:10px; }
+.store-category-btn.active { background:#a855f7!important; color:#0f0f0f!important; }
+.store-footer { background:#000!important; border-top:2px solid #a855f7; }
