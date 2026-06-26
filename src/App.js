@@ -5,8 +5,8 @@ import StoreFront from './components/StoreFront';
 import ManageProducts from './components/ManageProducts';
 import ManageSettings from './components/ManageSettings';
 import ManageOrders from './components/ManageOrders';
-import ManageDiscountCodes from './components/ManageDiscountCodes'; // ✅ مستورد
-import { Menu, X, Package, Palette, ExternalLink, LogOut, Mail, Lock, Store, Link as LinkIcon, Copy, Check, Loader as Loader2, ShoppingCart, Percent } from 'lucide-react'; // ✅ أضفنا Percent
+import ManageDiscountCodes from './components/ManageDiscountCodes';
+import { Menu, X, Package, Palette, ExternalLink, LogOut, Mail, Lock, Store, Link as LinkIcon, Copy, Check, Loader as Loader2, ShoppingCart, Percent, UserPlus } from 'lucide-react';
 
 export default function App() {
   // ─── قراءة المسار من الرابط ──────────────────────────────────────────
@@ -73,12 +73,12 @@ export default function App() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // ─── قائمة التنقل (تم إضافة أكواد الخصم) ──────────────────────────────
+  // ─── قائمة التنقل ──────────────────────────────────────────────────────
   const navItems = [
     { id: 'products',  label: 'إدارة المنتجات',    icon: Package,      description: 'أضف منتجاتك وحدد المخزون والتصنيفات' },
     { id: 'orders',    label: 'الطلبات الواردة',   icon: ShoppingCart, description: 'تابع طلبات الزبائن وحالات الشحن' },
     { id: 'settings',  label: 'تعديل مظهر المتجر', icon: Palette,      description: 'الخطوط، البنرات، والهوية البصرية' },
-    { id: 'discounts', label: 'أكواد الخصم',       icon: Percent,      description: 'أنشئ أكواد خصم نسبة مئوية أو مبلغ ثابت' }, // ✅ جديد
+    { id: 'discounts', label: 'أكواد الخصم',       icon: Percent,      description: 'أنشئ أكواد خصم نسبة مئوية أو مبلغ ثابت' },
   ];
 
   if (loading) return (
@@ -99,6 +99,7 @@ export default function App() {
           <h2 style={{ margin: '0 0 6px', color: theme.colors.text, fontSize: 22, fontWeight: 700 }}>لوحة تحكم التجار</h2>
           <p style={{ margin: 0, color: theme.colors.textMuted, fontSize: 14 }}>سجّل دخولك لإدارة متجرك</p>
         </div>
+
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
             <label style={labelStyle}>البريد الإلكتروني</label>
@@ -119,6 +120,44 @@ export default function App() {
             {authLoading ? 'جاري الدخول...' : 'الدخول إلى لوحة التحكم'}
           </button>
         </form>
+
+        {/* ─── ✅ رابط إنشاء حساب جديد ────────────────────────────────── */}
+        <div style={{ textAlign: 'center', marginTop: 22, paddingTop: 18, borderTop: `1px solid ${theme.colors.borderSoft}` }}>
+          <a
+            href="https://loginoni3lm.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              color: theme.colors.accent,
+              fontSize: '14px',
+              fontWeight: 700,
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              padding: '6px 14px',
+              borderRadius: theme.radius.pill,
+              backgroundColor: `${theme.colors.accent}10`,
+              border: `1px solid ${theme.colors.accent}30`,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = `${theme.colors.accent}20`;
+              e.currentTarget.style.borderColor = theme.colors.accent;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = `${theme.colors.accent}10`;
+              e.currentTarget.style.borderColor = `${theme.colors.accent}30`;
+            }}
+          >
+            <UserPlus size={18} />
+            <span>إنشاء حساب جديد</span>
+            <ExternalLink size={14} style={{ opacity: 0.6 }} />
+          </a>
+          <p style={{ margin: '8px 0 0', fontSize: '12px', color: theme.colors.textSubtle }}>
+            سيتم توجيهك إلى صفحة التسجيل لإنشاء متجرك الاحترافي
+          </p>
+        </div>
       </div>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
     </div>
@@ -141,7 +180,15 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: theme.font.base, direction: 'rtl', minHeight: '100vh', backgroundColor: theme.colors.bg }}>
-      <style>{`@keyframes spin { to { transform: rotate(360deg) } } @keyframes drawerSlideIn { from { transform: translateX(100%) } to { transform: translateX(0) } } @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } } @keyframes slideUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } } .drawer-enter { animation: drawerSlideIn 280ms cubic-bezier(0.32,0.72,0,1) both } .overlay-enter { animation: fadeIn 200ms ease both } .content-enter { animation: slideUp 240ms cubic-bezier(0.4,0,0.2,1) both }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg) } }
+        @keyframes drawerSlideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+        .drawer-enter { animation: drawerSlideIn 280ms cubic-bezier(0.32,0.72,0,1) both }
+        .overlay-enter { animation: fadeIn 200ms ease both }
+        .content-enter { animation: slideUp 240ms cubic-bezier(0.4,0,0.2,1) both }
+      `}</style>
 
       <header style={{ backgroundColor: theme.colors.surface, borderBottom: `1px solid ${theme.colors.border}`, padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, position: 'sticky', top: 0, zIndex: 50, boxShadow: theme.shadow.xs }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -224,7 +271,7 @@ export default function App() {
           {activeTab === 'products'  && <ManageProducts storeSlug={myStore.store_slug} />}
           {activeTab === 'orders'    && <ManageOrders   storeSlug={myStore.store_slug} />}
           {activeTab === 'settings'  && <ManageSettings storeSlug={myStore.store_slug} />}
-          {activeTab === 'discounts' && <ManageDiscountCodes storeSlug={myStore.store_slug} />} {/* ✅ جديد */}
+          {activeTab === 'discounts' && <ManageDiscountCodes storeSlug={myStore.store_slug} />}
         </div>
       </div>
     </div>
