@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import { theme, inputStyle, labelStyle, cardStyle } from './lib/theme';
@@ -6,19 +7,112 @@ import ManageProducts from './components/ManageProducts';
 import ManageSettings from './components/ManageSettings';
 import ManageOrders from './components/ManageOrders';
 import ManageDiscountCodes from './components/ManageDiscountCodes';
-import { Menu, X, Package, Palette, ExternalLink, LogOut, Mail, Lock, Store, Link as LinkIcon, Copy, Check, Loader as Loader2, ShoppingCart, Percent, UserPlus } from 'lucide-react';
+import LandingPage from './components/LandingPage'; // ✅ استيراد صفحة الهبوط
+import { 
+  Menu, X, Package, Palette, ExternalLink, LogOut, 
+  Mail, Lock, Store, Link as LinkIcon, Copy, Check, 
+  Loader as Loader2, ShoppingCart, Percent, UserPlus 
+} from 'lucide-react';
 
+// ─── مكوّن نموذج تسجيل الدخول ────────────────────────────────────────────
+function LoginForm({ onLoginSuccess }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ 
+      email: email.trim(), 
+      password: password.trim() 
+    });
+    if (error) {
+      alert(`❌ خطأ في تسجيل الدخول: ${error.message}`);
+    } else {
+      if (onLoginSuccess) onLoginSuccess();
+    }
+    setAuthLoading(false);
+  };
+
+  return (
+    <div style={{ ...fullScreen, backgroundColor: theme.colors.bg, direction: 'rtl', fontFamily: theme.font.base }}>
+      <div style={{ ...cardStyle, padding: 40, width: '100%', maxWidth: 420, boxShadow: theme.shadow.xl }}>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{ width: 52, height: 52, margin: '0 auto 16px', backgroundColor: theme.colors.primary, borderRadius: theme.radius.md, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Store size={26} color="#fff" />
+          </div>
+          <h2 style={{ margin: '0 0 6px', color: theme.colors.text, fontSize: 22, fontWeight: 700 }}>تسجيل الدخول</h2>
+          <p style={{ margin: 0, color: theme.colors.textMuted, fontSize: 14 }}>أدخل بياناتك للدخول إلى لوحة التحكم</p>
+        </div>
+
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div>
+            <label style={labelStyle}>البريد الإلكتروني</label>
+            <div style={{ position: 'relative' }}>
+              <Mail size={17} color={theme.colors.textSubtle} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+              <input 
+                type="email" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                required 
+                placeholder="you@store.com" 
+                style={{ ...inputStyle, direction: 'ltr', paddingRight: 42 }} 
+                autoComplete="email"
+              />
+            </div>
+          </div>
+          <div>
+            <label style={labelStyle}>كلمة المرور</label>
+            <div style={{ position: 'relative' }}>
+              <Lock size={17} color={theme.colors.textSubtle} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+              <input 
+                type="password" 
+                value={password} 
+                onChange={e => setPassword(e.target.value)} 
+                required 
+                placeholder="••••••••" 
+                style={{ ...inputStyle, direction: 'ltr', paddingRight: 42 }} 
+                autoComplete="current-password"
+              />
+            </div>
+          </div>
+          <button type="submit" disabled={authLoading} style={primaryButton(!!authLoading)}>
+            {authLoading && <Loader2 size={17} style={{ animation: 'spin 0.9s linear infinite' }} />}
+            {authLoading ? 'جاري الدخول...' : 'الدخول إلى لوحة التحكم'}
+          </button>
+        </form>
+
+        <div style={{ textAlign: 'center', marginTop: 18 }}>
+          <a href="/" style={{ color: theme.colors.accent, fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
+            ← العودة إلى الصفحة الرئيسية
+          </a>
+        </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+      </div>
+    </div>
+  );
+}
+
+// ─── المكوّن الرئيسي App ──────────────────────────────────────────────────
 export default function App() {
   // ─── قراءة المسار من الرابط ──────────────────────────────────────────
   const pathParts = window.location.pathname.split('/').filter(Boolean);
-  let customerStoreSlug = null;
-  if (pathParts[0] === 'store' && pathParts[1]) {
-    customerStoreSlug = pathParts[1];
-  } else if (pathParts[0]) {
-    customerStoreSlug = pathParts[0];
+  const firstPath = pathParts[0] || '';
+
+  // ─── عرض صفحة تسجيل الدخول ────────────────────────────────────────────
+  if (firstPath === 'login') {
+    return <LoginForm />;
   }
 
-  // ─── عرض المتجر مباشرة (بدون إعادة توجيه) ──────────────────────────
+  // ─── عرض المتجر مباشرة (أي مسار آخر غير login أو admin) ──────────────
+  let customerStoreSlug = null;
+  if (firstPath === 'store' && pathParts[1]) {
+    customerStoreSlug = pathParts[1];
+  } else if (firstPath) {
+    customerStoreSlug = firstPath;
+  }
+
   if (customerStoreSlug) {
     return <StoreFront slug={customerStoreSlug} />;
   }
@@ -30,9 +124,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('products');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -57,14 +148,6 @@ export default function App() {
     finally { setLoading(false); }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setAuthLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) alert(`خطأ: ${error.message}`);
-    setAuthLoading(false);
-  };
-
   const handleCopyLink = () => {
     if (!myStore) return;
     const url = `${window.location.origin}/${myStore.store_slug}`;
@@ -81,6 +164,7 @@ export default function App() {
     { id: 'discounts', label: 'أكواد الخصم',       icon: Percent,      description: 'أنشئ أكواد خصم نسبة مئوية أو مبلغ ثابت' },
   ];
 
+  // ─── أثناء التحميل ────────────────────────────────────────────────────
   if (loading) return (
     <div style={{ ...centered, fontFamily: theme.font.base, direction: 'rtl' }}>
       <Loader2 size={28} color={theme.colors.textSubtle} style={{ animation: 'spin 1s linear infinite' }} />
@@ -89,80 +173,12 @@ export default function App() {
     </div>
   );
 
-  if (!session) return (
-    <div style={{ ...fullScreen, backgroundColor: theme.colors.bg, direction: 'rtl', fontFamily: theme.font.base }}>
-      <div style={{ ...cardStyle, padding: 40, width: '100%', maxWidth: 420, boxShadow: theme.shadow.xl }}>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{ width: 52, height: 52, margin: '0 auto 16px', backgroundColor: theme.colors.primary, borderRadius: theme.radius.md, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Store size={26} color="#fff" />
-          </div>
-          <h2 style={{ margin: '0 0 6px', color: theme.colors.text, fontSize: 22, fontWeight: 700 }}>لوحة تحكم التجار</h2>
-          <p style={{ margin: 0, color: theme.colors.textMuted, fontSize: 14 }}>سجّل دخولك لإدارة متجرك</p>
-        </div>
+  // ─── إذا لم يكن هناك جلسة، نعرض صفحة الهبوط ──────────────────────────
+  if (!session) {
+    return <LandingPage />;
+  }
 
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div>
-            <label style={labelStyle}>البريد الإلكتروني</label>
-            <div style={{ position: 'relative' }}>
-              <Mail size={17} color={theme.colors.textSubtle} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@store.com" style={{ ...inputStyle, direction: 'ltr', paddingRight: 42 }} />
-            </div>
-          </div>
-          <div>
-            <label style={labelStyle}>كلمة المرور</label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={17} color={theme.colors.textSubtle} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" style={{ ...inputStyle, direction: 'ltr', paddingRight: 42 }} />
-            </div>
-          </div>
-          <button type="submit" disabled={authLoading} style={primaryButton(!!authLoading)}>
-            {authLoading && <Loader2 size={17} style={{ animation: 'spin 0.9s linear infinite' }} />}
-            {authLoading ? 'جاري الدخول...' : 'الدخول إلى لوحة التحكم'}
-          </button>
-        </form>
-
-        {/* ─── ✅ رابط إنشاء حساب جديد ────────────────────────────────── */}
-        <div style={{ textAlign: 'center', marginTop: 22, paddingTop: 18, borderTop: `1px solid ${theme.colors.borderSoft}` }}>
-          <a
-            href="https://loginoni3lm.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              color: theme.colors.accent,
-              fontSize: '14px',
-              fontWeight: 700,
-              textDecoration: 'none',
-              transition: 'all 0.2s',
-              padding: '6px 14px',
-              borderRadius: theme.radius.pill,
-              backgroundColor: `${theme.colors.accent}10`,
-              border: `1px solid ${theme.colors.accent}30`,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = `${theme.colors.accent}20`;
-              e.currentTarget.style.borderColor = theme.colors.accent;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = `${theme.colors.accent}10`;
-              e.currentTarget.style.borderColor = `${theme.colors.accent}30`;
-            }}
-          >
-            <UserPlus size={18} />
-            <span>إنشاء حساب جديد</span>
-            <ExternalLink size={14} style={{ opacity: 0.6 }} />
-          </a>
-          <p style={{ margin: '8px 0 0', fontSize: '12px', color: theme.colors.textSubtle }}>
-            سيتم توجيهك إلى صفحة التسجيل لإنشاء متجرك الاحترافي
-          </p>
-        </div>
-      </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-    </div>
-  );
-
+  // ─── إذا كان هناك جلسة ولكن لا يوجد متجر ─────────────────────────────
   if (!myStore) return (
     <div style={{ ...centered, direction: 'rtl', fontFamily: theme.font.base, minHeight: '100vh', backgroundColor: theme.colors.bg }}>
       <div style={{ ...cardStyle, padding: 40, textAlign: 'center', maxWidth: 440 }}>
@@ -178,6 +194,7 @@ export default function App() {
 
   const storeCustomerUrl = `${window.location.origin}/${myStore.store_slug}`;
 
+  // ─── عرض لوحة التحكم (للمستخدمين المسجلين ولديهم متجر) ──────────────
   return (
     <div style={{ fontFamily: theme.font.base, direction: 'rtl', minHeight: '100vh', backgroundColor: theme.colors.bg }}>
       <style>{`
@@ -284,6 +301,31 @@ const fullScreen  = { ...centered, padding: 24 };
 const iconButton  = { width: 40, height: 40, flex: '0 0 40px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent', border: 'none', borderRadius: theme.radius.sm, cursor: 'pointer' };
 const ghostButton = { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 14px', backgroundColor: theme.colors.bg, color: theme.colors.text, border: `1px solid ${theme.colors.border}`, borderRadius: theme.radius.sm, cursor: 'pointer', fontSize: 13, fontWeight: 600 };
 const pillButton  = { display: 'inline-flex', alignItems: 'center', gap: 5, padding: '7px 12px', border: 'none', borderRadius: theme.radius.pill, cursor: 'pointer' };
-function primaryButton(disabled) { return { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: 13, backgroundColor: disabled ? theme.colors.textSubtle : theme.colors.primary, color: '#fff', border: 'none', borderRadius: theme.radius.sm, cursor: disabled ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 600 }; }
-function drawerItem(a) { return { display: 'flex', alignItems: 'center', gap: 12, padding: 12, backgroundColor: a ? theme.colors.accentSoft : 'transparent', border: 'none', borderRadius: theme.radius.md, cursor: 'pointer', textAlign: 'right', color: a ? theme.colors.accent : theme.colors.text, width: '100%' }; }
-function drawerIconWrap(a, bg, color) { return { width: 38, height: 38, flex: '0 0 38px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: a ? '#fff' : (bg || theme.colors.bg), color: a ? theme.colors.accent : (color || theme.colors.text), borderRadius: theme.radius.sm }; }
+function primaryButton(disabled) { 
+  return { 
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, 
+    width: '100%', padding: 13, 
+    backgroundColor: disabled ? theme.colors.textSubtle : theme.colors.primary, 
+    color: '#fff', border: 'none', borderRadius: theme.radius.sm, 
+    cursor: disabled ? 'not-allowed' : 'pointer', 
+    fontSize: 14, fontWeight: 600 
+  }; 
+}
+function drawerItem(a) { 
+  return { 
+    display: 'flex', alignItems: 'center', gap: 12, padding: 12, 
+    backgroundColor: a ? theme.colors.accentSoft : 'transparent', 
+    border: 'none', borderRadius: theme.radius.md, cursor: 'pointer', 
+    textAlign: 'right', color: a ? theme.colors.accent : theme.colors.text, 
+    width: '100%' 
+  }; 
+}
+function drawerIconWrap(a, bg, color) { 
+  return { 
+    width: 38, height: 38, flex: '0 0 38px', 
+    display: 'flex', alignItems: 'center', justifyContent: 'center', 
+    backgroundColor: a ? '#fff' : (bg || theme.colors.bg), 
+    color: a ? theme.colors.accent : (color || theme.colors.text), 
+    borderRadius: theme.radius.sm 
+  }; 
+}
