@@ -1,4 +1,4 @@
-// src/components/LandingPage.jsx (نسخة مختصرة بدون أخطاء)
+// src/components/LandingPage.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { theme } from '../lib/theme';
