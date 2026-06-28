@@ -96,34 +96,16 @@ function LoginForm({ onLoginSuccess }) {
 
 // ─── المكوّن الرئيسي App ──────────────────────────────────────────────────
 export default function App() {
-  // ─── قراءة المسار من الرابط ──────────────────────────────────────────
-  const pathParts = window.location.pathname.split('/').filter(Boolean);
-  const firstPath = pathParts[0] || '';
-
-  // ─── عرض صفحة تسجيل الدخول ────────────────────────────────────────────
-  if (firstPath === 'login') {
-    return <LoginForm />;
-  }
-
-  // ─── عرض المتجر مباشرة (أي مسار آخر غير login أو admin) ──────────────
-  let customerStoreSlug = null;
-  if (firstPath === 'store' && pathParts[1]) {
-    customerStoreSlug = pathParts[1];
-  } else if (firstPath) {
-    customerStoreSlug = firstPath;
-  }
-
-  if (customerStoreSlug) {
-    return <StoreFront slug={customerStoreSlug} />;
-  }
-
-  // ─── باقي المكون (الجلسة، لوحة التحكم) ──────────────────────────────
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [myStore, setMyStore] = useState(null);
   const [activeTab, setActiveTab] = useState('products');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // ─── قراءة المسار من الرابط ──────────────────────────────────────────
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const firstPath = pathParts[0] || '';
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -156,19 +138,10 @@ export default function App() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // ✅ دالة للذهاب إلى المتجر مباشرة
   const goToStore = () => {
     if (!myStore) return;
     window.location.href = `/${myStore.store_slug}`;
   };
-
-  // ─── قائمة التنقل ──────────────────────────────────────────────────────
-  const navItems = [
-    { id: 'products',  label: 'إدارة المنتجات',    icon: Package,      description: 'أضف منتجاتك وحدد المخزون والتصنيفات' },
-    { id: 'orders',    label: 'الطلبات الواردة',   icon: ShoppingCart, description: 'تابع طلبات الزبائن وحالات الشحن' },
-    { id: 'settings',  label: 'تعديل مظهر المتجر', icon: Palette,      description: 'الخطوط، البنرات، والهوية البصرية' },
-    { id: 'discounts', label: 'أكواد الخصم',       icon: Percent,      description: 'أنشئ أكواد خصم نسبة مئوية أو مبلغ ثابت' },
-  ];
 
   // ─── أثناء التحميل ────────────────────────────────────────────────────
   if (loading) return (
@@ -178,6 +151,29 @@ export default function App() {
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
     </div>
   );
+
+  // ─── عرض صفحة تسجيل الدخول ────────────────────────────────────────────
+  // ✅ الإصلاح: تمرير onLoginSuccess لتوجيه المستخدم بعد الدخول
+  if (firstPath === 'login') {
+    if (session) {
+      // إذا كان مسجلاً مسبقاً، وجّهه مباشرة للرئيسية
+      window.location.href = '/';
+      return null;
+    }
+    return <LoginForm onLoginSuccess={() => { window.location.href = '/'; }} />;
+  }
+
+  // ─── عرض المتجر مباشرة ────────────────────────────────────────────────
+  let customerStoreSlug = null;
+  if (firstPath === 'store' && pathParts[1]) {
+    customerStoreSlug = pathParts[1];
+  } else if (firstPath) {
+    customerStoreSlug = firstPath;
+  }
+
+  if (customerStoreSlug) {
+    return <StoreFront slug={customerStoreSlug} />;
+  }
 
   // ─── إذا لم يكن هناك جلسة، نعرض صفحة الهبوط ──────────────────────────
   if (!session) {
@@ -200,7 +196,14 @@ export default function App() {
 
   const storeCustomerUrl = `${window.location.origin}/${myStore.store_slug}`;
 
-  // ─── عرض لوحة التحكم (للمستخدمين المسجلين ولديهم متجر) ──────────────
+  // ─── عرض لوحة التحكم ──────────────────────────────────────────────────
+  const navItems = [
+    { id: 'products',  label: 'إدارة المنتجات',    icon: Package,      description: 'أضف منتجاتك وحدد المخزون والتصنيفات' },
+    { id: 'orders',    label: 'الطلبات الواردة',   icon: ShoppingCart, description: 'تابع طلبات الزبائن وحالات الشحن' },
+    { id: 'settings',  label: 'تعديل مظهر المتجر', icon: Palette,      description: 'الخطوط، البنرات، والهوية البصرية' },
+    { id: 'discounts', label: 'أكواد الخصم',       icon: Percent,      description: 'أنشئ أكواد خصم نسبة مئوية أو مبلغ ثابت' },
+  ];
+
   return (
     <div style={{ fontFamily: theme.font.base, direction: 'rtl', minHeight: '100vh', backgroundColor: theme.colors.bg }}>
       <style>{`
@@ -238,7 +241,6 @@ export default function App() {
             {copied ? <Check size={14} /> : <Copy size={14} />}
             <span style={{ fontSize: 12, fontWeight: 600 }}>{copied ? 'تم' : 'نسخ'}</span>
           </button>
-          {/* ✅ زر متجري */}
           <button onClick={goToStore} style={{ padding: '6px 14px', backgroundColor: '#10b981', color: '#fff', border: 'none', borderRadius: '9999px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>
             🏪 متجري
           </button>
@@ -276,7 +278,6 @@ export default function App() {
                 </button>
               );
             })}
-            {/* ✅ زر عرض المتجر كزبون (في نفس النافذة) */}
             <button onClick={goToStore} style={{ ...drawerItem(false), textDecoration: 'none', marginTop: 6, width: '100%', textAlign: 'right' }}>
               <span style={drawerIconWrap(false, theme.colors.successSoft, theme.colors.success)}><ExternalLink size={18} /></span>
               <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
