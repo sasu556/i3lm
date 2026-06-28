@@ -1,0 +1,22 @@
+/* كتب ورقية - دفء المكتبات */
+body { background:#fffbeb; color:#451a03; font-family: 'Crimson Text', serif; }
+.store-header-wrapper { background:rgba(255,251,235,0.95)!important; border-bottom:2px solid #92400e; }
+
+.product-card {
+  background: #fef3c7;
+  border: 2px solid #d4a373 !important;
+  border-radius: 4px !important;
+  box-shadow: 4px 4px 0 rgba(146,64,14,0.2);
+  transition: 0.2s;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 6px 6px 0 rgba(146,64,14,0.3);
+}
+.product-image { border-radius: 2px 2px 0 0 !important; }
+.product-title { font-size: 15px !important; font-weight: 700 !important; color:#451a03 !important; }
+.add-to-cart-btn { background: #92400e !important; border-radius: 2px !important; font-weight: 600; }
+
+.store-category-btn { background:#fef3c7!important; border:2px solid #d4a373!important; color:#78350f!important; border-radius:4px; font-weight:600; }
+.store-category-btn.active { background:#92400e!important; color:#fff!important; border-color:#92400e!important; }
+.store-footer { background:#fef3c7!important; border-top:2px solid #92400e; color:#451a03!important; }
