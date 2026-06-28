@@ -1,4 +1,4 @@
-// src/components/LandingPage.jsx
+// src/components/LandingPage.jsx (نسخة مختصرة بدون أخطاء)
 import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { theme } from '../lib/theme';
@@ -230,7 +230,7 @@ export default function LandingPage() {
 
       {/* ─── الهيرو ────────────────────────────────────────────────────── */}
       <section style={{ padding: '80px 20px 60px', textAlign: 'center', background: 'linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)' }}>
-        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', padding: '6px 18px', borderRadius: '50px', fontSize: '12px', fontWeight: 700', marginBottom: '24px' }}>
+        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', padding: '6px 18px', borderRadius: '50px', fontSize: '12px', fontWeight: 700, marginBottom: '24px' }}>
           🚀 منصة التجارة الإلكترونية الأولى في الجزائر
         </div>
         <h1 style={{ fontFamily: 'Amiri, serif', fontSize: 'clamp(38px, 7vw, 72px)', fontWeight: 700, color: '#0f172a', lineHeight: 1.2, marginBottom: '16px' }}>
@@ -247,10 +247,7 @@ export default function LandingPage() {
         </p>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
           <button onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
-            style={{ padding: '15px 36px', borderRadius: '50px', fontFamily: 'Cairo, sans-serif', fontWeight: 800, fontSize: '15px', border: 'none', cursor: 'pointer', background: '#2563eb', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 6px 20px rgba(37,99,235,0.25)' }}
-            onMouseEnter={(e) => { e.target.style.background = '#1d4ed8'; }}
-            onMouseLeave={(e) => { e.target.style.background = '#2563eb'; }}
-          >
+            style={{ padding: '15px 36px', borderRadius: '50px', fontFamily: 'Cairo, sans-serif', fontWeight: 800, fontSize: '15px', border: 'none', cursor: 'pointer', background: '#2563eb', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 6px 20px rgba(37,99,235,0.25)' }}>
             اختر باقتك الآن
           </button>
           <a href="https://www.facebook.com/profile.php?id=61576048735334" target="_blank" rel="noopener noreferrer"
@@ -272,24 +269,15 @@ export default function LandingPage() {
 
       {/* ─── المميزات ──────────────────────────────────────────────────── */}
       <section style={{ padding: '56px 20px', maxWidth: '1100px', margin: '0 auto' }}>
-        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', fontSize: '11px', fontWeight: 700, padding: '4px 14px', borderRadius: '50px', marginBottom: '12px' }}>
-          المميزات
-        </div>
-        <h2 style={{ fontFamily: 'Amiri, serif', fontSize: 'clamp(28px, 4vw, 46px)', fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: '14px' }}>
-          كل ما تحتاجه في متجرك
-        </h2>
-        <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '480px', lineHeight: 1.8 }}>
-          جميع الباقات تتضمن هذه الأدوات الاحترافية:
-        </p>
+        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', fontSize: '11px', fontWeight: 700, padding: '4px 14px', borderRadius: '50px', marginBottom: '12px' }}>المميزات</div>
+        <h2 style={{ fontFamily: 'Amiri, serif', fontSize: 'clamp(28px, 4vw, 46px)', fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: '14px' }}>كل ما تحتاجه في متجرك</h2>
+        <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '480px', lineHeight: 1.8 }}>جميع الباقات تتضمن هذه الأدوات الاحترافية:</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0', border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', background: '#fff', marginTop: '32px' }}>
           {features.map((feat, i) => (
             <div key={i} style={{ padding: '30px 24px', borderLeft: i % 2 === 0 && i < 14 ? '1px solid #e2e8f0' : 'none', borderBottom: i < 14 ? '1px solid #e2e8f0' : 'none', transition: 'background 0.2s' }}
               onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-            >
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#dbeafe', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-                {feat.icon}
-              </div>
+              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#dbeafe', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>{feat.icon}</div>
               <h3 style={{ fontSize: '15px', fontWeight: 700, marginBottom: '6px' }}>{feat.title}</h3>
               <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.7 }}>{feat.desc}</p>
             </div>
@@ -299,26 +287,15 @@ export default function LandingPage() {
 
       {/* ─── الباقات ───────────────────────────────────────────────────── */}
       <section style={{ padding: '56px 20px', maxWidth: '1100px', margin: '0 auto' }} id="pricing">
-        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', fontSize: '11px', fontWeight: 700, padding: '4px 14px', borderRadius: '50px', marginBottom: '12px' }}>
-          الأسعار
-        </div>
-        <h2 style={{ fontFamily: 'Amiri, serif', fontSize: 'clamp(28px, 4vw, 46px)', fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: '14px' }}>
-          اختر باقتك المناسبة
-        </h2>
-        <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '480px', lineHeight: 1.8 }}>
-          جميع الباقات تشمل متجراً كاملاً مع لوحة تحكم — ابدأ فوراً.
-        </p>
+        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', fontSize: '11px', fontWeight: 700, padding: '4px 14px', borderRadius: '50px', marginBottom: '12px' }}>الأسعار</div>
+        <h2 style={{ fontFamily: 'Amiri, serif', fontSize: 'clamp(28px, 4vw, 46px)', fontWeight: 700, color: '#0f172a', lineHeight: 1.25, marginBottom: '14px' }}>اختر باقتك المناسبة</h2>
+        <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '480px', lineHeight: 1.8 }}>جميع الباقات تشمل متجراً كاملاً مع لوحة تحكم — ابدأ فوراً.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '40px' }}>
-          
           {/* ─── الباقة المجانية ────────────────────────────────────── */}
           <div style={{ background: '#fff', border: '1.5px solid #059669', borderRadius: '16px', padding: '32px 24px', textAlign: 'center', position: 'relative', transition: 'all 0.3s', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-            <div style={{ position: 'absolute', top: '-13px', insetInline: '32px', background: '#059669', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '5px 16px', borderRadius: '50px' }}>
-              ✨ عرض خاص
-            </div>
+            <div style={{ position: 'absolute', top: '-13px', insetInline: '32px', background: '#059669', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '5px 16px', borderRadius: '50px' }}>✨ عرض خاص</div>
             <p style={{ fontFamily: 'Amiri, serif', fontSize: '22px', fontWeight: 700, marginBottom: '6px' }}>تجربة مجانية ✨</p>
-            <div style={{ fontFamily: 'Amiri, serif', fontSize: '52px', fontWeight: 700, color: '#0f172a', lineHeight: 1, margin: '16px 0 4px' }}>
-              0 <sub style={{ fontSize: '18px', color: '#64748b', fontFamily: 'Cairo, sans-serif', fontWeight: 600 }}>دج</sub>
-            </div>
+            <div style={{ fontFamily: 'Amiri, serif', fontSize: '52px', fontWeight: 700, color: '#0f172a', lineHeight: 1, margin: '16px 0 4px' }}>0 <sub style={{ fontSize: '18px', color: '#64748b', fontFamily: 'Cairo, sans-serif', fontWeight: 600 }}>دج</sub></div>
             <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '24px' }}>لمدة 18 يوم – بدون دفع مسبق</p>
             <ul style={{ listStyle: 'none', textAlign: 'right', borderTop: '1px solid #e2e8f0', marginBottom: '24px', padding: 0 }}>
               {['كل مميزات الباقة العادية', 'متجر كامل مع سلة ودفع', 'توصيل للـ 69 ولاية', 'لوحة تحليلات وFacebook Pixel', 'أكواد الخصم وصفحة منتج متطورة', 'TikTok Pixel والتحكم بالمخزون', 'منتجات رقمية مع إمكانية إضافة رقم CCP/بريدي موب'].map((item, i) => (
@@ -333,21 +310,16 @@ export default function LandingPage() {
             <button onClick={() => selectPlan('free')}
               style={{ width: '100%', padding: '14px', borderRadius: '50px', fontFamily: 'Cairo, sans-serif', fontWeight: 800, fontSize: '14px', border: '1.5px solid #059669', cursor: 'pointer', background: '#059669', color: '#fff', transition: 'all 0.25s' }}
               onMouseEnter={(e) => { e.target.style.background = '#047857'; }}
-              onMouseLeave={(e) => { e.target.style.background = '#059669'; }}
-            >
+              onMouseLeave={(e) => { e.target.style.background = '#059669'; }}>
               اطلب المتجر مجاناً
             </button>
           </div>
 
           {/* ─── الباقة المدفوعة ────────────────────────────────────── */}
           <div style={{ background: '#fff', border: '1.5px solid #2563eb', borderRadius: '16px', padding: '32px 24px', textAlign: 'center', position: 'relative', transition: 'all 0.3s', boxShadow: '0 4px 16px rgba(37,99,235,0.08)' }}>
-            <div style={{ position: 'absolute', top: '-13px', insetInline: '32px', background: '#2563eb', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '5px 16px', borderRadius: '50px' }}>
-              ⭐ مدفوع
-            </div>
+            <div style={{ position: 'absolute', top: '-13px', insetInline: '32px', background: '#2563eb', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '5px 16px', borderRadius: '50px' }}>⭐ مدفوع</div>
             <p style={{ fontFamily: 'Amiri, serif', fontSize: '22px', fontWeight: 700, marginBottom: '6px' }}>باقة مدفوعة</p>
-            <div style={{ fontFamily: 'Amiri, serif', fontSize: '52px', fontWeight: 700, color: '#0f172a', lineHeight: 1, margin: '16px 0 4px' }}>
-              600 <sub style={{ fontSize: '18px', color: '#64748b', fontFamily: 'Cairo, sans-serif', fontWeight: 600 }}>دج/شهر</sub>
-            </div>
+            <div style={{ fontFamily: 'Amiri, serif', fontSize: '52px', fontWeight: 700, color: '#0f172a', lineHeight: 1, margin: '16px 0 4px' }}>600 <sub style={{ fontSize: '18px', color: '#64748b', fontFamily: 'Cairo, sans-serif', fontWeight: 600 }}>دج/شهر</sub></div>
             <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '24px' }}>شهري – مع وصل الدفع</p>
             <ul style={{ listStyle: 'none', textAlign: 'right', borderTop: '1px solid #e2e8f0', marginBottom: '24px', padding: 0 }}>
               {['كل مميزات العادي', 'متجر كامل مع سلة ودفع', 'توصيل للـ 69 ولاية', 'لوحة تحليلات', 'Facebook Pixel', 'تخصيص كامل', 'أكواد الخصم', 'صفحة منتج مع ألوان', 'TikTok Pixel', 'التحكم بالمخزون', 'منتجات رقمية + رقم CCP/بريدي موب'].map((item, i) => (
@@ -359,8 +331,7 @@ export default function LandingPage() {
             <button onClick={() => selectPlan('paid')}
               style={{ width: '100%', padding: '14px', borderRadius: '50px', fontFamily: 'Cairo, sans-serif', fontWeight: 800, fontSize: '14px', border: '1.5px solid #2563eb', cursor: 'pointer', background: '#2563eb', color: '#fff', transition: 'all 0.25s' }}
               onMouseEnter={(e) => { e.target.style.background = '#1d4ed8'; }}
-              onMouseLeave={(e) => { e.target.style.background = '#2563eb'; }}
-            >
+              onMouseLeave={(e) => { e.target.style.background = '#2563eb'; }}>
               اشتر الآن
             </button>
           </div>
@@ -370,20 +341,14 @@ export default function LandingPage() {
       {/* ─── نموذج التسجيل ────────────────────────────────────────────── */}
       <section id="register-form" style={{ padding: '40px 20px 60px', maxWidth: '700px', margin: '0 auto' }}>
         <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '32px 28px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)' }}>
-          <h2 style={{ fontFamily: 'Amiri, serif', fontSize: '28px', fontWeight: 700, color: '#0f172a', marginBottom: '8px', textAlign: 'center' }}>
-            🚀 أنشئ متجرك الآن
-          </h2>
+          <h2 style={{ fontFamily: 'Amiri, serif', fontSize: '28px', fontWeight: 700, color: '#0f172a', marginBottom: '8px', textAlign: 'center' }}>🚀 أنشئ متجرك الآن</h2>
           <p style={{ fontSize: '14px', color: '#64748b', textAlign: 'center', marginBottom: '24px' }}>
-            {form.plan === 'free' 
-              ? 'املأ البيانات وسنقوم بإنشاء متجرك خلال 24 ساعة (تجربة مجانية 18 يوم)' 
-              : 'املأ البيانات وارفع وصل الدفع وسنقوم بمراجعة طلبك وتفعيل متجرك'}
+            {form.plan === 'free' ? 'املأ البيانات وسنقوم بإنشاء متجرك خلال 24 ساعة (تجربة مجانية 18 يوم)' : 'املأ البيانات وارفع وصل الدفع وسنقوم بمراجعة طلبك وتفعيل متجرك'}
           </p>
 
           {result && (
             <div style={{ padding: '12px 16px', borderRadius: '10px', backgroundColor: result.success ? '#d1fae5' : '#fee2e2', border: `1px solid ${result.success ? '#6ee7b7' : '#fca5a5'}`, marginBottom: '20px' }}>
-              <p style={{ margin: 0, color: result.success ? '#065f46' : '#991b1b', fontSize: '14px' }}>
-                {result.message}
-              </p>
+              <p style={{ margin: 0, color: result.success ? '#065f46' : '#991b1b', fontSize: '14px' }}>{result.message}</p>
               {result.success && result.data && result.data.storeSlug && (
                 <div style={{ marginTop: '8px', fontSize: '13px', color: '#065f46', background: 'rgba(255,255,255,0.6)', padding: '10px', borderRadius: '6px' }}>
                   <div><strong>البريد:</strong> {result.data.email}</div>
@@ -397,9 +362,7 @@ export default function LandingPage() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ background: form.plan === 'free' ? '#d1fae5' : '#dbeafe', padding: '10px 16px', borderRadius: '10px', textAlign: 'center', fontSize: '14px', fontWeight: 700, color: form.plan === 'free' ? '#065f46' : '#1e40af' }}>
-              {form.plan === 'free' 
-                ? '🆓 باقة مجانية (تجربة 18 يوم)' 
-                : '💳 باقة مدفوعة (600 دج/شهر)'}
+              {form.plan === 'free' ? '🆓 باقة مجانية (تجربة 18 يوم)' : '💳 باقة مدفوعة (600 دج/شهر)'}
             </div>
 
             <div>
@@ -449,30 +412,33 @@ export default function LandingPage() {
 
             {form.plan === 'paid' && (
               <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#64748b', marginBottom: '6px' }}>
-                  وصل الدفع * <span style={{ fontSize: '11px', color: '#ef4444', marginRight: '6px' }}>(مطلوب)</span>
-                </label>
-                <div style={{ border: `2px dashed ${fileError ? '#ef4444' : file ? '#10b981' : '#cbd5e1'}`, borderRadius: '10px', padding: '20px', textAlign: 'center', background: file ? '#f0fdf4' : '#f9fafb', position: 'relative', transition: 'all 0.2s' }}>
-                  <input type="file" ref={fileInputRef} accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={handleFileChange}
-                    style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#64748b', marginBottom: '6px' }}>وصل الدفع * <span style={{ fontSize: '11px', color: '#ef4444', marginRight: '6px' }}>(مطلوب للباقة المدفوعة)</span></label>
+                <div style={{ border: `2px dashed ${fileError ? '#ef4444' : file ? '#10b981' : '#cbd5e1'}`, borderRadius: '10px', padding: '20px', textAlign: 'center', background: file ? '#f0fdf4' : '#f9fafb', position: 'relative', transition: 'all 0.2s' }}
+                  onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = '#2563eb'; }}
+                  onDragLeave={(e) => { e.currentTarget.style.borderColor = file ? '#10b981' : '#cbd5e1'; }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const dropped = e.dataTransfer.files[0];
+                    if (dropped) {
+                      const input = fileInputRef.current;
+                      const dt = new DataTransfer();
+                      dt.items.add(dropped);
+                      input.files = dt.files;
+                      handleFileChange({ target: input });
+                    }
+                  }}>
+                  <input type="file" ref={fileInputRef} accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={handleFileChange} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                   {file ? (
                     <div>
                       <FileText size={32} color="#10b981" style={{ marginBottom: '8px' }} />
                       <p style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{file.name}</p>
                       <p style={{ fontSize: '11px', color: '#64748b' }}>{(file.size / 1024).toFixed(1)} كيلوبايت</p>
-                      <button type="button" onClick={removeFile}
-                        style={{ marginTop: '8px', background: '#fee2e2', border: 'none', padding: '4px 16px', borderRadius: '6px', color: '#dc2626', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>
-                        إزالة
-                      </button>
+                      <button type="button" onClick={removeFile} style={{ marginTop: '8px', background: '#fee2e2', border: 'none', padding: '4px 16px', borderRadius: '6px', color: '#dc2626', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>إزالة</button>
                     </div>
                   ) : (
                     <div>
                       <Upload size={28} color={fileError ? '#ef4444' : '#94a3b8'} style={{ marginBottom: '8px' }} />
-                      <p style={{ fontSize: '13px', color: fileError ? '#ef4444' : '#64748b' }}>
-                        {fileError || 'اسحب الملف هنا أو انقر للاختيار'}
-                        <br />
-                        <span style={{ fontSize: '11px', opacity: 0.7 }}>PDF أو صورة — أقصى حجم 5 ميغا</span>
-                      </p>
+                      <p style={{ fontSize: '13px', color: fileError ? '#ef4444' : '#64748b' }}>{fileError || 'اسحب الملف هنا أو انقر للاختيار'}<br /><span style={{ fontSize: '11px', opacity: 0.7 }}>PDF أو صورة — أقصى حجم 5 ميغا</span></p>
                     </div>
                   )}
                 </div>
@@ -481,13 +447,9 @@ export default function LandingPage() {
             )}
 
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '4px' }}>
-              <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)}
-                style={{ marginTop: '4px', width: '18px', height: '18px', accentColor: '#2563eb' }} required />
+              <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} style={{ marginTop: '4px', width: '18px', height: '18px', accentColor: '#2563eb' }} required />
               <label style={{ fontSize: '13px', color: '#64748b', cursor: 'pointer' }}>
-                أوافق على <button type="button" onClick={() => setShowTerms(!showTerms)}
-                  style={{ background: 'none', border: 'none', color: '#2563eb', textDecoration: 'underline', cursor: 'pointer', fontWeight: 700, fontSize: '13px' }}>
-                  الشروط والأحكام
-                </button> وسياسة الاستخدام *
+                أوافق على <button type="button" onClick={() => setShowTerms(!showTerms)} style={{ background: 'none', border: 'none', color: '#2563eb', textDecoration: 'underline', cursor: 'pointer', fontWeight: 700, fontSize: '13px' }}>الشروط والأحكام</button> وسياسة الاستخدام *
               </label>
             </div>
 
@@ -500,10 +462,7 @@ export default function LandingPage() {
                 <p><strong>4. عدم الاسترداد:</strong> المبالغ المدفوعة للاشتراكات غير قابلة للاسترداد بعد التفعيل.</p>
                 <p><strong>5. إخلاء المسؤولية:</strong> المنصة غير مسؤولة عن أي خسائر أو أضرار ناتجة عن استخدام المتجر.</p>
                 <p><strong>6. التعاون مع السلطات:</strong> في حال طلبت الجهات الرسمية بيانات العميل، تلتزم المنصة بتقديمها.</p>
-                <button type="button" onClick={() => setShowTerms(false)}
-                  style={{ marginTop: '10px', padding: '6px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
-                  إغلاق
-                </button>
+                <button type="button" onClick={() => setShowTerms(false)} style={{ marginTop: '10px', padding: '6px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>إغلاق</button>
               </div>
             )}
 
@@ -516,6 +475,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── الفوتر ────────────────────────────────────────────────────── */}
       <footer style={{ borderTop: '1px solid #e2e8f0', padding: '24px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: '#fff' }}>
         <span style={{ fontFamily: 'Amiri, serif', fontSize: '20px', fontWeight: 700 }}>إعلم<span style={{ color: '#2563eb' }}>.</span></span>
         <p style={{ fontSize: '12px', color: '#64748b' }}>© 2026 منصة إعلم للمتاجر الإلكترونية — جميع الحقوق محفوظة</p>
