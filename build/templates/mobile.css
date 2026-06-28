@@ -1,0 +1,33 @@
+/* هواتف - بطاقات داكنة مع انعكاس */
+body { background:#0f172a; color:#f1f5f9; }
+.store-header-wrapper { background:rgba(15,23,42,0.85)!important; backdrop-filter:blur(16px); border-bottom:1px solid rgba(59,130,246,0.2); }
+.store-search-input { background:rgba(30,41,59,0.8)!important; border-color:rgba(59,130,246,0.3)!important; color:#e2e8f0!important; border-radius:14px; }
+
+.product-card {
+  background: linear-gradient(145deg, #1e293b, #0f172a) !important;
+  border: 1px solid rgba(59, 130, 246, 0.15) !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  position: relative;
+}
+.product-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, rgba(59,130,246,0.1), transparent);
+  pointer-events: none;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,130,246,0.5);
+}
+.product-image { border-radius: 20px 20px 0 0 !important; }
+.product-title { color: #e2e8f0 !important; }
+.add-to-cart-btn { background: #3b82f6 !important; border-radius: 9999px !important; }
+
+.store-category-btn { background:rgba(255,255,255,0.08)!important; border-color:rgba(226,232,240,0.15)!important; color:#cbd5e1!important; border-radius:12px; }
+.store-category-btn.active { background:#3b82f6!important; color:#fff!important; }
+.store-footer { background:#020617!important; border-top:1px solid rgba(59,130,246,0.2); }

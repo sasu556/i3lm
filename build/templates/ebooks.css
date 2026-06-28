@@ -1,0 +1,24 @@
+/* كتب رقمية - أناقة وبساطة */
+body { background:#f8fafc; color:#1e293b; font-family: 'Source Serif Pro', serif; }
+.store-header-wrapper { background:#fff; border-bottom:1px solid #e2e8f0; }
+
+.product-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px !important;
+  box-shadow: none;
+  transition: 0.2s;
+}
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+  border-color: #2563eb;
+}
+.product-image { border-radius: 6px 6px 0 0 !important; filter: brightness(0.98); }
+.product-card:hover .product-image { filter: brightness(1); }
+.product-title { font-size: 14px !important; font-weight: 600 !important; color: #0f172a !important; }
+.add-to-cart-btn { background: #2563eb !important; border-radius: 6px !important; font-weight: 600; }
+
+.store-category-btn { background:#fff!important; border-color:#e2e8f0!important; color:#475569!important; border-radius:6px; }
+.store-category-btn.active { background:#2563eb!important; color:#fff!important; }
+.store-footer { background:#fff!important; border-top:1px solid #e2e8f0; color:#1e293b!important; }

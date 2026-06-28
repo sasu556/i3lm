@@ -230,7 +230,7 @@ export default function LandingPage() {
 
       {/* ─── الهيرو ────────────────────────────────────────────────────── */}
       <section style={{ padding: '80px 20px 60px', textAlign: 'center', background: 'linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)' }}>
-        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', padding: '6px 18px', borderRadius: '50px', fontSize: '12px', fontWeight: 700', marginBottom: '24px' }}>
+        <div style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', padding: '6px 18px', borderRadius: '50px', fontSize: '12px', fontWeight: 700, marginBottom: '24px' }}>
           🚀 منصة التجارة الإلكترونية الأولى في الجزائر
         </div>
         <h1 style={{ fontFamily: 'Amiri, serif', fontSize: 'clamp(38px, 7vw, 72px)', fontWeight: 700, color: '#0f172a', lineHeight: 1.2, marginBottom: '16px' }}>
