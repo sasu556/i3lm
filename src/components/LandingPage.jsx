@@ -118,7 +118,7 @@ export default function LandingPage() {
     }
 
     try {
-      const response = await fetch('/.netlify/functions/submit-form', {
+      const response = await fetch('/api/submit-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -159,11 +159,13 @@ export default function LandingPage() {
       if (fileInputRef.current) fileInputRef.current.value = '';
       setAgreeTerms(false);
 
-      if (form.plan === 'free') {
+      // ✅ التوجيه المباشر إلى المتجر بدلاً من الصفحة الرئيسية
+      if (form.plan === 'free' && data.data?.storeSlug) {
         setTimeout(() => {
-          window.location.href = '/';
-        }, 3000);
+          window.location.href = `/${data.data.storeSlug}`;
+        }, 2000);
       }
+
     } catch (err) {
       setResult({ success: false, message: `❌ ${err.message}` });
     } finally {
