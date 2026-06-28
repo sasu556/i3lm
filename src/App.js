@@ -7,7 +7,7 @@ import ManageProducts from './components/ManageProducts';
 import ManageSettings from './components/ManageSettings';
 import ManageOrders from './components/ManageOrders';
 import ManageDiscountCodes from './components/ManageDiscountCodes';
-import LandingPage from './components/LandingPage'; // ✅ استيراد صفحة الهبوط
+import LandingPage from './components/LandingPage';
 import { 
   Menu, X, Package, Palette, ExternalLink, LogOut, 
   Mail, Lock, Store, Link as LinkIcon, Copy, Check, 
@@ -156,6 +156,12 @@ export default function App() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // ✅ دالة للذهاب إلى المتجر مباشرة
+  const goToStore = () => {
+    if (!myStore) return;
+    window.location.href = `/${myStore.store_slug}`;
+  };
+
   // ─── قائمة التنقل ──────────────────────────────────────────────────────
   const navItems = [
     { id: 'products',  label: 'إدارة المنتجات',    icon: Package,      description: 'أضف منتجاتك وحدد المخزون والتصنيفات' },
@@ -232,6 +238,10 @@ export default function App() {
             {copied ? <Check size={14} /> : <Copy size={14} />}
             <span style={{ fontSize: 12, fontWeight: 600 }}>{copied ? 'تم' : 'نسخ'}</span>
           </button>
+          {/* ✅ زر متجري */}
+          <button onClick={goToStore} style={{ padding: '6px 14px', backgroundColor: '#10b981', color: '#fff', border: 'none', borderRadius: '9999px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>
+            🏪 متجري
+          </button>
         </div>
 
         <button onClick={() => supabase.auth.signOut()} style={ghostButton}>
@@ -266,13 +276,14 @@ export default function App() {
                 </button>
               );
             })}
-            <a href={storeCustomerUrl} target="_blank" rel="noreferrer" style={{ ...drawerItem(false), textDecoration: 'none', marginTop: 6 }}>
+            {/* ✅ زر عرض المتجر كزبون (في نفس النافذة) */}
+            <button onClick={goToStore} style={{ ...drawerItem(false), textDecoration: 'none', marginTop: 6, width: '100%', textAlign: 'right' }}>
               <span style={drawerIconWrap(false, theme.colors.successSoft, theme.colors.success)}><ExternalLink size={18} /></span>
               <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <span style={{ fontSize: 14, fontWeight: 600 }}>عرض المتجر كزبون</span>
-                <span style={{ fontSize: 12, color: theme.colors.textSubtle }}>يفتح في تبويب جديد</span>
+                <span style={{ fontSize: 12, color: theme.colors.textSubtle }}>يفتح في نفس النافذة</span>
               </span>
-            </a>
+            </button>
           </nav>
           <div style={{ padding: '16px 22px', borderTop: `1px solid ${theme.colors.borderSoft}` }}>
             <button onClick={() => supabase.auth.signOut()} style={{ ...ghostButton, width: '100%', justifyContent: 'center' }}>
