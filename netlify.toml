@@ -5,14 +5,12 @@
 [functions]
   directory = "netlify/functions"
 
-# ─── 1️⃣ توجيه طلبات API إلى Netlify Functions (يجب أن يكون أولاً) ───
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
   force = true
 
-# ─── 2️⃣ توجيه كل الطلبات الأخرى إلى صفحة React (يجب أن يكون آخراً) ───
 [[redirects]]
   from = "/*"
   to = "/index.html"
